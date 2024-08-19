@@ -20,18 +20,27 @@ header{
     justify-content: space-between;
     align-items: center;
 }
+header .search-bar {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    flex-grow: 1;
+    gap: 10px;
+}
 header .logo .material-icons{
-    font-size: 36px;
-    color:white;
+    flex-grow: 1;
 }
-header select, header input{
-    margin-left:10px;
-    padding: 5px;
-    border-radius:5px;
-    border: 1px solid #ddd;
+header select{
+    margin-right:auto;
+
 }
+    header input[type="text"] {
+        padding: 5px;
+        border-radius: 5px;
+        border: 1px solid #ddd;
+        width: 200px;
+    }
 main{
-    text-align: center;
     margin:50px auto;
     max-width: 800px;
 }
@@ -40,12 +49,14 @@ main h1{
     font-size:3rem;
     color: #E57F3D;
     margin-bottom: 10px;
+    text-align:left;
 }
 main h2{
     font-family: 'Poetsen One', sans-serif;
     font-size: 2.5rem;
     color:#008080;
     margin-bottom:20px;
+    text-align: left;
 }
 main img{
     width:60%;
