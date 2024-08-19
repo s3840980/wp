@@ -1,1 +1,110 @@
+@import url('https://fonts.googleapis.com/css2?family=Ysabeau+SC:wght@400&family=Poetsen+One&family=Permanent+Marker&display=swap');
 
+body,h1,h2,p,select,input,button,table,th,td{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Ysabeau SC', sans-serif;
+
+
+}
+body{
+    background-color:#fcf9ec;
+    color: #36454F;
+}
+
+header{
+    background-color: #008080;
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+header .logo .material-icons{
+    font-size: 36px;
+    color:white;
+}
+header select, header input{
+    margin-left:10px;
+    padding: 5px;
+    border-radius:5px;
+    border: 1px solid #ddd;
+}
+main{
+    text-align: center;
+    margin:50px auto;
+    max-width: 800px;
+}
+main h1{
+    font-family: 'Permanent Marker', cursive;
+    font-size:3rem;
+    color: #E57F3D;
+    margin-bottom: 10px;
+}
+main h2{
+    font-family: 'Poetsen One', sans-serif;
+    font-size: 2.5rem;
+    color:#008080;
+    margin-bottom:20px;
+}
+main img{
+    width:60%;
+    border-radius:50%;
+    margin-top:20px;
+}
+table{
+    width: 100%;
+    margin-top: 30px;
+    border-collapse: collapse;
+
+}
+table, th, td{
+    border: 1px solid #ddd;
+
+}
+th, td{
+    padding: 10px;
+    text-align: left;
+
+}
+th{
+    background-color: #008080;
+    color: #fff;
+}
+
+form{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+form label{
+    margin-top: 20px;
+}
+
+form input, form select, form textarea, form button{
+    margin-top: 10px;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    width: 80%;
+
+}
+form button{
+    background-color:#008080;
+    color:white;
+    border: none;
+    cursor: pointer;
+    margin-top:20px;
+    width: 40%;
+}
+form button:hover{
+    background-color: #E57F3D;
+}
+
+footer{
+    background-color:#E57F3D;
+    color:white;
+    padding: 15px 20px;
+    text-align: center;
+    margin-top: 50px;
+}
