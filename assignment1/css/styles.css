@@ -1,24 +1,15 @@
-@import url('https://fonts.googleapis.com/css2?family=Ysabeau+SC:wght@400&family=Poetsen+One&family=Permanent+Marker&display=swap');
-
-body,h1,h2,p,select,input,button,table,th,td{
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: 'Ysabeau SC', sans-serif;
-
-
-}
 body{
+    font-family: 'Ysabeau SC', sans-serif;
+    margin: 0 auto;
+    max-width: 1200px;
     background-color:#fcf9ec;
     color: #36454F;
 }
 
 header{
     background-color: #008080;
-    padding: 10px 20px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+    padding: 10px 0;
+
 }
 header .search-bar {
     display: flex;
