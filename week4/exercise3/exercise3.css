@@ -1,0 +1,17 @@
+#p1{
+    width: 500px;
+    font-family: Verdana;
+    margin: 20px;
+    padding: 10px;
+    border: 1px solid blue;
+    border-left-width: 10px;
+    border-left-color: blue;
+    background-color: lightgray;
+
+}
+#p2{
+    position: absolute;
+    top: 500px;
+    left: 500px;
+    
+}
