@@ -3,26 +3,29 @@
     <head>
         <title>Pets</title>
         <meta charset="utf-8">
-        <link rel="stylesheet" href="styles.css">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="css/styles.css">
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Permanent+Marker&family=Poetsen+One&family=Ysabeau+SC&display=swap">
     </head>
     <body>
         <header>
             <nav class="navbar">
-                <a href="index.html" class="logo"><img src="images/logo.jpeg" alt="Logo"></a>
+                <div class="nav-left">
+                <a href="index.html" class="logo"><img src="images/logo.png" alt="Logo"></a>
                 <select id="menu" class="nav-select" onchange="navigateToPage(this.value)">
                     <option value="index.html">Home</option>
                     <option value="pets.html">Pets</option>
                     <option value="add_more.html">Add More</option>
                     <option value="gallery.html">Gallery</option>
                 </select>
+                </div>
                 <form id="search-bar">
                     <input type="text" placeholders="Search" class="search-input">
                     </form>
             </nav>
         </header>
         <main>
-            <h2 class="site-title">Discover Pets Victoria</h2>
+            <h2 class="page-title">Discover Pets Victoria</h2>
             <p class="description">
                 Pets Victoria is a dedicated pet adoption organization based in Victoria, Australia, Focused on providing a safe and loving environment for pets in need. With a compassionate approach, Pets Victoria works tirelessly to rescue, rehabilitate, and rehome dogs, cats, and other animals. Their mission is to connect these deserving pets with caring individuals and families, creating lifelong bonds. The organization offers a range of services, including adoption counseling, pet education, and community support programs, all aimed at promoting responsible pet ownership and reducing the number of homeless animals.
             </p>
