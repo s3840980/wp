@@ -1,1 +1,82 @@
-
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Gallery</title>
+        <meta charset="utf-8">
+        <link rel="stylesheet" href="css/styles.css">
+        <link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&family=Poetsen+One&family=Ysabeau+SC&display=swap" rel="stylesheet">
+        
+        
+    </head>
+    <body>
+        <header>
+            <nav class="navbar">
+                <div class="nav-left">
+                <a href="index.html" class="logo"><img src="images/logo.png" alt="Logo"></a>
+                <select id="menu" class="nav-select" onchange="navigateToPage(this.value)">
+                    <option value="">Select an Option...</option>
+                    <option value="index.html">Home</option>
+                    <option value="pets.html">Pets</option>
+                    <option value="add.html">Add More</option>
+                    <option value="gallery.html">Gallery</option>
+                </select>
+                </div>
+                <form id="search-bar">
+                    <input type="text" placeholder="Search" class="search-input">
+                    </form>
+            </nav>
+        </header>
+        <main>
+            <h2 class="page-title">Pets Victoria has a lot to offer!</h2>
+            <p class="description">For almost two decades, Pets Victoria has helped in creating true social change by bringing pet adoption into the mainstream. Our work has helped make a difference to the Victorian rescue community and thousands of pets in need of rescue and rehabilitation. But, until every pet is safe, respected, and loved, we all still have big, hairy work to do.</p>
+            <div class="gallery">
+                <div class="gallery-item">
+                    <img src="images/cat1.jpeg" alt="cat lying down">
+                    <div class="overlay">
+                        <p>Discover More!</p>
+                    </div>
+                    <p>Milo</p>
+                </div>
+                <div class="gallery-item">
+                    <img src="images/dog1.jpeg" alt="dog lying down">
+                    <div class="overlay">
+                        <p>Discover More!</p>
+                    </div>
+                    <p>Baxter</p>
+                </div>
+                <div class="gallery-item">
+                    <img src="images/cat2.jpeg" alt="cat 2">
+                    <div class="overlay">
+                        <p>Discover More!</p>
+                    </div>
+                    <p>Luna</p>
+                </div>
+                <div class="gallery-item">
+                    <img src="images/dog2.jpeg" alt="dog 2">
+                    <div class="overlay">
+                        <p>Discover More!</p>
+                    </div>
+                    <p>Willow</p>
+                </div>
+                <div class="gallery-item">
+                    <img src="images/cat3.jpeg" alt="cat 3">
+                    <div class="overlay">
+                        <p>Discover More!</p>
+                    </div>
+                    <p>Oliver</p>
+                </div>
+                <div class="gallery-item">
+                    <img src="images/dog3.jpeg" alt="dog 3">
+                    <div class="overlay">
+                        <p>Discover More!</p>
+                    </div>
+                    <p>Bella</p>
+                </div>
+            </div>
+        </main>
+        <footer>
+            <p>&copy; Robert Jacob Voluntad. All rights reserved | Designed for Pets Victoria</p>
+        </footer>
+        <script src="js/main.js"></scripts>
+    </body>
+</html>
