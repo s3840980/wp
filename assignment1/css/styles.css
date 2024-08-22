@@ -108,13 +108,13 @@ main{
     margin: 20px auto;
     width: 50%;
     border-radius: 10px;
-    align-items: left;
+    
 }
 .pets-table{
     margin:20px auto;
     width: 40%;
     border-collapse: collapse;
-    align-items: right;
+    
     font-size:16px;
     border: solid #36454F;
 }
