@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Add More</title>
+        <meta charset="utf-8">
+        <link rel="stylesheet" href="css/styles.css">
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Permanent+Marker&family=Poetsen+One&family=Ysabeau+SC&display=swap">
+    </head>
+    <body>
+        <header>
+            <nav class="navbar">
+                <div class="nav-left">
+                <a href="index.html" class="logo"><img src="images/logo.png" alt="Logo"></a>
+                <select id="menu" class="nav-select" onchange="navigateToPage(this.value)">
+                    <option value="">Select an Option...</option>
+                    <option value="index.html">Home</option>
+                    <option value="pets.html">Pets</option>
+                    <option value="add.html">Add More</option>
+                    <option value="gallery.html">Gallery</option>
+                </select>
+                </div>
+                <form id="search-bar">
+                    <input type="text" placeholder="Search" class="search-input">
+                    </form>
+            </nav>
+        </header>
+        <main>
+            <h2 class="page-title">Add a Pet</h2>
+            <p class="description">You can add a new pet here</p>
+            <form class="pet-form">
+                <label for="pet-name">Pet Name:</label>
+                <input type="text" id="pet-name" name="pet-name" placeholder="Provide a name for the pet" required>
+
+                <label for="type">Type: *</label>
+                <select id="type" name="type" required>
+                    <option value="">--Choose an option--</option>
+                    <option value="cat">Cat</option>
+                    <option value="dog">Dog</option>
+                </select>
+
+                <label for="description">Description *</label>
+                <textarea id="description" name="description" placeholder="Describe the pet briefly" required></textarea>
+
+                <label for="image">Select an Image: *</label>
+                <input type="file" id="image" name="image" required>
+                <small class="image-info">Max image size: 500px</small>
+
+                <label for="image-caption">Image Caption: *</label>
+                <input type="text" id="image-caption" name="image-caption" placeholder="describe the image in one word" required>
+
+                <label for="age">Age (months): *</label>
+                <input type="number" id="age" name="age" placeholder="Age of a pet in months" required>
+
+                <label for="location">Location: *</label>
+                <input type="text" id="location" name="location" placeholder="Location of the pet" required>
+
+                <div class="form-buttons">
+                    <button type="submit" class="submit-button">Submit</button>
+                    <button type="reset" class="reset-button">Clear</button>
+                </div>
+
+            </form>
+        </main>
+        <footer>
+            <p> &copy; Robert Jacob Voluntad. All Rights Reserved | Designed for Pets Victoria</p>
+
+        </footer>
+        <script src="js/main.js"></script>
+    </body>
+</html>
