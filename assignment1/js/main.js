@@ -1,5 +1,5 @@
 function navigateToPage(page) {
-    if (page !== "") {
+    if (page) {
         window.location.href = page;
     }
 }
