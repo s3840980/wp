@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <title>Pets Victoria</title>
-  <link rel= "stylesheet" href="css/styles.css">
+  <link rel= "stylesheet" href="css/style.css">
 </head>
 <body>
   <div class="wrapper">
