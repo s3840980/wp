@@ -6,15 +6,7 @@ include('includes/nav.inc');
 
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <title>Pets Victoria</title>
-        <meta charset="utf-8">
-        <link rel="stylesheet" href="css/styles.css">
-        <link href="https://fonts.googleapis.com/css2?family=Permanent+Marker&family=Poetsen+One&family=Ysabeau+SC&display=swap" rel="stylesheet">
-        
-        
-
-    </head>
+    
     <body>
         
         <main>
