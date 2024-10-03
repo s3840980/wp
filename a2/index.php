@@ -1,7 +1,8 @@
+<?php
 include('includes/db_connect.inc');
 include('includes/header.inc');
 include('includes/nav.inc');
-
+?>
 
 <main>
             
@@ -11,8 +12,8 @@ include('includes/nav.inc');
             
         <img src="images/main.jpg" alt="A puppy and a kitten cuddling" class="index-image">
 </main>
-
+      <?php
       include('includes/footer.inc');
-        
+      ?>
 <script src="js/main.js"></script>
     
