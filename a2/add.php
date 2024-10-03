@@ -96,4 +96,4 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 include('includes/footer.inc');
 ?>
 
-<script src="js/main.js"></script>
+
