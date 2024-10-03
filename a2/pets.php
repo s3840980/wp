@@ -47,4 +47,4 @@ $result = $conn->query($sql);
 include('includes/footer.inc');
 ?>
 
-<script src="js/main.js"></script>
+
