@@ -3,7 +3,6 @@ include('includes/db_connect.inc');
 include('includes/header.inc');
 include('includes/nav.inc');
 ?>
-
 <main>
             
             <h1 class="site-title">PETS VICTORIA</h1>
@@ -15,5 +14,5 @@ include('includes/nav.inc');
 <?php
 include('includes/footer.inc');
 ?>
-<script src="js/main.js"></script>
+    <script src="js/main.js"></script>
     
