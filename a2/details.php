@@ -41,4 +41,4 @@ if (isset($_GET['id'])) {
 include('includes/footer.inc');
 ?>
 
-<script src="js/main.js"></script>
+
