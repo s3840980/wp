@@ -1,5 +1,14 @@
-
+<?php
 $servername = "localhost";
-$username = "s3840980";
-$password = "Jollybird4!";
-$dbname = "petsvictoria";
+$username = "s3840980"; 
+$password = "Jollybird4!"; // 
+$dbname = "petsvictoria"; // 
+
+
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+?>
