@@ -2,9 +2,7 @@ include('includes/db_connect.inc');
 include('includes/header.inc');
 include('includes/nav.inc');
 
-<!DOCTYPE html>
-<html lang="en">
-    <body>
+
         <main>
             
             <h1 class="site-title">PETS VICTORIA</h1>
