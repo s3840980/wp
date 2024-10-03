@@ -16,23 +16,7 @@ include('includes/nav.inc');
 
     </head>
     <body>
-        <header>
-            <nav class="navbar">
-                <div class="nav-left">
-                <a href="index.html" class="logo"><img src="images/logo.png" alt="Logo"></a>
-                <select id="menu" class="nav-select" onchange="navigateToPage(this.value)">
-                    <option value="">Select an Option...</option>
-                    <option value="index.html">Home</option>
-                    <option value="pets.html">Pets</option>
-                    <option value="add.html">Add More</option>
-                    <option value="gallery.html">Gallery</option>
-                </select>
-                </div>
-                <form id="search-bar">
-                    <input type="text" placeholder="Search" class="search-input">
-                    </form>
-            </nav>
-        </header>
+        
         <main>
             
             <h1 class="site-title">PETS VICTORIA</h1>
