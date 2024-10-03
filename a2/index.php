@@ -12,8 +12,8 @@ include('includes/nav.inc');
             
         <img src="images/main.jpg" alt="A puppy and a kitten cuddling" class="index-image">
 </main>
-      <?php
-      include('includes/footer.inc');
-      ?>
+<?php
+include('includes/footer.inc');
+?>
 <script src="js/main.js"></script>
     
