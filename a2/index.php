@@ -3,16 +3,16 @@ include('includes/header.inc');
 include('includes/nav.inc');
 
 
-        <main>
+<main>
             
             <h1 class="site-title">PETS VICTORIA</h1>
             <h2 class="subheading">WELCOME TO PET 
-                <br> 
-                ADOPTION</h2>
+                <br> ADOPTION</h2>
             
-            <img src="images/main.jpg" alt="A puppy and a kitten cuddling" class="index-image">
-        </main>
+        <img src="images/main.jpg" alt="A puppy and a kitten cuddling" class="index-image">
+</main>
+
       include('includes/footer.inc');
         
-        <script src="js/main.js"></script>
+<script src="js/main.js"></script>
     
