@@ -1,8 +1,8 @@
 <?php
 $title = "Search Results";
-include('include/db_connect.inc');
-include('include/header.inc'); 
-include('include/nav.inc');
+include('includes/db_connect.inc');
+include('includes/header.inc'); 
+include('includes/nav.inc');
 
 
 $keyword = isset($_GET['keyword']) ? $_GET['keyword'] : '';
@@ -65,4 +65,4 @@ $result = $stmt->get_result();
     </div>
 </main>
 
-<?php include('include/footer.inc'); ?>
+<?php include('includes/footer.inc'); ?>
