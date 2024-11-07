@@ -6,9 +6,7 @@ $title = "Login Page";
 include('includes/db_connect.inc'); 
 include('includes/header.inc'); 
 
-
 $errorMsg = "";
-
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Sanitize and validate inputs
@@ -18,19 +16,19 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     if (!$email || !$password) {
         $errorMsg = "Please provide both email and password.";
     } else {
-        
+        // Prepare SQL statement to retrieve the user with the given email
         $stmt = $conn->prepare("SELECT id, username, password FROM users WHERE email = ?");
         $stmt->bind_param("s", $email);
         $stmt->execute();
         $stmt->store_result();
-        
+
         if ($stmt->num_rows === 1) {
             $stmt->bind_result($id, $username, $hashedPassword);
             $stmt->fetch();
 
-           
-            if (password_verify($password, $hashedPassword)) {
-                // Set session variables
+            // Hash the input password with SHA-1 and compare with stored hash
+            if (sha1($password) === $hashedPassword) {
+                // Set session variables upon successful login
                 $_SESSION["id"] = $id;
                 $_SESSION['username'] = $username;
                 header("Location: user.php"); 
@@ -69,7 +67,6 @@ include('includes/nav.inc');
             <input type="password" name="password" class="form-control" id="password" required>
             <div class="invalid-feedback">Please provide your password.</div>
         </div>
-
 
         <div class="text-center">
             <button class="btn btn-primary" type="submit">Login</button>
