@@ -1,53 +1,60 @@
 <?php
-session_start();
-if (!isset($_SESSION['user_id'])) {
+session_start(); 
+$title = "User Pets Page";
+include('include/db_connect.inc'); 
+include('include/header.inc'); 
+include('include/nav.inc'); 
+
+
+if (!isset($_SESSION['id'])) {
     header("Location: login.php");
     exit();
 }
 
-$title = "User Profile";
-include('includes/header.inc.php');
-include('includes/db_connect.inc.php');
 
-$username = $_SESSION['username'];
-
-
-$stmt = $conn->prepare("SELECT username, email FROM users WHERE id = :id");
-$stmt->bindParam(':id', $_SESSION['user_id']);
+$userId = $_SESSION['id'];
+$query = "SELECT id, name, type, description, age, location, image_path FROM pets WHERE user_id = ?";
+$stmt = $conn->prepare($query);
+$stmt->bind_param("i", $userId);
 $stmt->execute();
-$user = $stmt->fetch(PDO::FETCH_ASSOC);
-
-
-$pets_stmt = $conn->prepare("SELECT id, petname, image, caption FROM pets WHERE username = :username ORDER BY id DESC");
-$pets_stmt->bindParam(':username', $username);
-$pets_stmt->execute();
-$pets = $pets_stmt->fetchAll(PDO::FETCH_ASSOC);
+$result = $stmt->get_result();
 ?>
 
-<h2>User Profile</h2>
+<main class="container my-4">
+    <h1 class="m-4 text-center"><?= htmlspecialchars($_SESSION['username']) ?>'s Collection</h1>
 
-<div class="user-profile">
-    <p><strong>Username:</strong> <?php echo htmlspecialchars($user['username']); ?></p>
-    <p><strong>Email:</strong> <?php echo htmlspecialchars($user['email']); ?></p>
-</div>
-
-<h3>Your Pets</h3>
-<div class="gallery-container">
-    <?php if (count($pets) > 0): ?>
-        <?php foreach ($pets as $pet): ?>
-            <div class="gallery-item">
-                <a href="details.php?id=<?php echo htmlspecialchars($pet['id']); ?>">
-                    <img src="images/<?php echo htmlspecialchars($pet['image']); ?>" alt="<?php echo htmlspecialchars($pet['petname']); ?>" class="gallery-image">
-                </a>
-                <div class="gallery-caption">
-                    <strong><?php echo htmlspecialchars($pet['petname']); ?></strong>
-                    <p><?php echo htmlspecialchars($pet['caption']); ?></p>
+    <?php if ($result->num_rows > 0): ?>
+        <?php while ($pet = $result->fetch_assoc()): ?>
+            <div class="row mb-5">
+                <div class="col-md-4">
+                    <img src="<?= htmlspecialchars($pet['image_path']) ?>" alt="<?= htmlspecialchars($pet['name']) ?>" class="pet-image mb-3">
+                </div>
+                <div class="col-md-8">
+                    <h2><?= htmlspecialchars($pet['name']) ?></h2>
+                    <p><?= htmlspecialchars($pet['description']) ?></p>
+                    <div class="pet-info">
+                        <span><i class="far fa-clock"></i> <?= htmlspecialchars($pet['age']) ?> months</span>
+                        <span><i class="fas fa-paw"></i> <?= htmlspecialchars($pet['type']) ?></span>
+                        <span><i class="fas fa-map-marker-alt"></i> <?= htmlspecialchars($pet['location']) ?></span>
+                    </div>
+                    <a href="edit.php?id=<?= $pet['id'] ?>" class="btn btn-primary">Edit</a>
+                    <a href="delete.php?id=<?= $pet['id'] ?>" class="btn btn-danger" onclick="return confirm('Are you sure you want to delete this pet?');">Delete</a>
                 </div>
             </div>
-        <?php endforeach; ?>
+        <?php endwhile; ?>
     <?php else: ?>
-        <p>You have not added any pets yet.</p>
+        <div class="alert alert-warning text-center">
+            <h3>You have no pets listed.</h3>
+            <p class="mb-4">Click the button below to add your first pet!</p>
+            <a href="add.php" class="btn btn-success">Add Pet</a>
+        </div>
     <?php endif; ?>
-</div>
 
-<?php include('includes/footer.inc.php'); ?>
+    <?php
+    
+    $result->free();
+    $stmt->close();
+    ?>
+</main>
+
+<?php include('include/footer.inc'); ?>
