@@ -43,7 +43,7 @@ if (session_status() === PHP_SESSION_NONE) {
                 }
                 ?>
             </ul>
-            <form class="d-flex" method="GET" action="navsearch.php">
+            <form class="d-flex" method="GET" action="search.php">
                 <input class="form-control me-2" type="search" name="keyword" placeholder="Search" aria-label="Search">
                 <button class="btn btn-outline-light" type="submit">Search</button>
             </form>
