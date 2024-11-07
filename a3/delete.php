@@ -1,48 +1,59 @@
 <?php
-session_start();
-if (!isset($_SESSION['user_id'])) {
+session_start(); 
+$title = "Delete Pet Page";
+include('include/db_connect.inc'); 
+include('include/header.inc'); 
+include('include/nav.inc'); 
+
+if (!isset($_SESSION['id'])) {
     header("Location: login.php");
     exit();
 }
 
-include('includes/db_connect.inc.php');
+if (isset($_GET['id'])) {
+    $petId = intval($_GET['id']); 
 
-$pet_id = $_GET['id'];
-$message = "";
+    $query = "SELECT image_path FROM pets WHERE id = ? AND user_id = ?";
+    $stmt = $conn->prepare($query);
+    $stmt->bind_param("ii", $petId, $_SESSION['id']);
+    $stmt->execute();
+    $result = $stmt->get_result();
 
-
-$stmt = $conn->prepare("SELECT * FROM pets WHERE id = :id AND username = :username");
-$stmt->bindParam(':id', $pet_id);
-$stmt->bindParam(':username', $_SESSION['username']);
-$stmt->execute();
-$pet = $stmt->fetch(PDO::FETCH_ASSOC);
-
-if (!$pet) {
-    echo "Pet not found or you do not have permission to delete this pet.";
-    exit();
-}
-
-
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    try {
-        $stmt = $conn->prepare("DELETE FROM pets WHERE id = :id AND username = :username");
-        $stmt->bindParam(':id', $pet_id);
-        $stmt->bindParam(':username', $_SESSION['username']);
-        $stmt->execute();
-
-        header("Location: pets.php");
+    if ($result->num_rows === 0) {
+        echo "<div class='alert alert-danger'>No pet found with that ID.</div>";
         exit();
-    } catch (PDOException $e) {
-        $message = "Error: " . $e->getMessage();
     }
+
+    $pet = $result->fetch_assoc();
+    $stmt->close();
+
+    $deleteQuery = "DELETE FROM pets WHERE id = ? AND user_id = ?";
+    $deleteStmt = $conn->prepare($deleteQuery);
+    $deleteStmt->bind_param("ii", $petId, $_SESSION['id']);
+
+    if ($deleteStmt->execute()) {
+        // Delete the image file from the server
+        if (file_exists($pet['image_path'])) {
+            unlink($pet['image_path']); // Delete the file
+        }
+        echo "<div class='alert alert-success'>Pet deleted successfully!</div>";
+    } else {
+        echo "<div class='alert alert-danger'>Error deleting pet. Please try again.</div>";
+    }
+
+    $deleteStmt->close();
+} else {
+    echo "<div class='alert alert-danger'>No pet ID provided.</div>";
+    exit();
 }
 ?>
 
-<h2>Delete Pet</h2>
-<p>Are you sure you want to delete the pet: <?php echo htmlspecialchars($pet['petname']); ?>?</p>
-<form method="POST" action="">
-    <button type="submit" class="btn-custom">Yes, Delete</button>
-    <a href="pets.php" class="btn-custom">Cancel</a>
-</form>
+<main class="container my-4">
+    <h1 class="text-center mb-4">Delete Pet</h1>
+    <p class="text-center mb-4">The pet has been deleted. You can go back to your pet list.</p>
+    <div class="text-center">
+        <a href="user.php" class="btn btn-primary">Go to Pet List</a>
+    </div>
+</main>
 
-<?php include('includes/footer.inc.php'); ?>
+<?php include('include/footer.inc'); ?>
