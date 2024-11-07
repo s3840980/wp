@@ -6,7 +6,7 @@ include('includes/nav.inc');
 
 $petType = isset($_GET['pet_type']) ? $_GET['pet_type'] : '';
 
-$query = "SELECT name, image_path, petid FROM pets WHERE 1=1"; 
+$query = "SELECT name, image_path, id FROM pets WHERE 1=1"; 
 
 if ($petType) {
     $query .= " AND type = ?";
@@ -29,7 +29,7 @@ $result = $stmt->get_result();
             <?php while ($pet = $result->fetch_assoc()): ?>
                 <div class="col-md-4">
                     <div class="pet-card">
-                        <a href="details.php?id=<?= $pet['petid'] ?>" style="text-decoration: none;">
+                        <a href="details.php?id=<?= $pet['id'] ?>" style="text-decoration: none;">
                             <img src="<?= htmlspecialchars($pet['image_path']) ?>" alt="<?= htmlspecialchars($pet['name']) ?>" class="img-fluid">
                             <div class="pet-name"><?= htmlspecialchars($pet['name']) ?></div>
                         </a>
