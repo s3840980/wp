@@ -10,34 +10,34 @@ $errorMsg = "";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Sanitize and validate inputs
-    $email = filter_var(trim($_POST['email']), FILTER_VALIDATE_EMAIL);
+    $username = trim($_POST['username']);
     $password = $_POST['password'];
 
-    if (!$email || !$password) {
-        $errorMsg = "Please provide both email and password.";
+    if (!$username || !$password) {
+        $errorMsg = "Please provide both username and password.";
     } else {
-        // Prepare SQL statement to retrieve the user with the given email
-        $stmt = $conn->prepare("SELECT id, username, password FROM users WHERE email = ?");
-        $stmt->bind_param("s", $email);
+        // Prepare SQL statement to retrieve the user with the given username
+        $stmt = $conn->prepare("SELECT userID, username, password FROM users WHERE username = ?");
+        $stmt->bind_param("s", $username);
         $stmt->execute();
         $stmt->store_result();
-
+        
         if ($stmt->num_rows === 1) {
             $stmt->bind_result($id, $username, $hashedPassword);
             $stmt->fetch();
 
-            // Hash the input password with SHA-1 and compare with stored hash
+            // Verify the password using SHA-1
             if (sha1($password) === $hashedPassword) {
-                // Set session variables upon successful login
+                // Set session variables
                 $_SESSION["id"] = $id;
                 $_SESSION['username'] = $username;
                 header("Location: user.php"); 
                 exit();
             } else {
-                $errorMsg = "Invalid email or password.";
+                $errorMsg = "Invalid username or password.";
             }
         } else {
-            $errorMsg = "No account found with that email.";
+            $errorMsg = "No account found with that username.";
         }
         $stmt->close();
     }
@@ -57,9 +57,9 @@ include('includes/nav.inc');
 
     <form class="needs-validation" action="<?= htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="POST" novalidate>
         <div class="mb-3">
-            <label for="email" class="form-label">Email<span class="text-danger">*</span></label>
-            <input type="email" name="email" class="form-control" id="email" required>
-            <div class="invalid-feedback">Please provide a valid email.</div>
+            <label for="username" class="form-label">Username<span class="text-danger">*</span></label>
+            <input type="text" name="username" class="form-control" id="username" required>
+            <div class="invalid-feedback">Please provide a username.</div>
         </div>
 
         <div class="mb-3">
@@ -75,7 +75,7 @@ include('includes/nav.inc');
     </form>
 
     <div class="text-center mt-3">
-        <p>Don't have an account? <a href="register.php" class="text-decoration-none ">Register here</a></p>
+        <p>Don't have an account? <a href="register.php" class="text-decoration-none">Register here</a></p>
     </div>
 </main>
 
