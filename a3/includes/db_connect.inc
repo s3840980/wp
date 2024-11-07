@@ -1,7 +1,7 @@
 <?php
 
 if (strstr($_SERVER['SERVER_NAME'], 'localhost')) {
-    $servername = "talsprddb02.int.its.rmit.edu.au";
+    $servername = "localhost";
     $username = "root";
     $password = "";
     $dbname = "petsvictoria";
