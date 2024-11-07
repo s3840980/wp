@@ -1,46 +1,52 @@
 <?php
+session_start();
+$title = "Home - Pets Victoria"; 
+include('includes/header.inc.php'); 
+include('includes/db_connect.inc.php'); 
 
-include('includes/db_connect.inc.php');
+
+$stmt = $conn->prepare("SELECT petname, image, caption FROM pets ORDER BY id DESC LIMIT 4");
+$stmt->execute();
+$pets = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pets Victoria - Home</title>
-    <link rel="stylesheet" href="css/styles.css">
-    
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-</head>
-<body>
+
 
 <header>
     <h1>Welcome to Pets Victoria</h1>
-    <p>Your trusted pet adoption agency!</p>
+    <?php if (isset($_SESSION['username'])): ?>
+        <p>Hello, <?php echo htmlspecialchars($_SESSION['username']); ?>! You are logged in.</p>
+        <p>Welcome to Pets Victoria! You can <a href="pets.php">view all pets</a> or <a href="add.php">add a new pet</a>.</p>
+        <a href="logout.php" class="btn-custom">Logout</a>
+    <?php else: ?>
+        <p>Please <a href="login.php">login</a> or <a href="register.php">register</a> to access more features.</p>
+    <?php endif; ?>
 </header>
 
 
-<div id="carouselExample" class="carousel slide" data-bs-ride="carousel">
+<div id="petCarousel" class="carousel slide" data-bs-ride="carousel">
     <div class="carousel-inner">
-        <div class="carousel-item active">
-            <img src="images/cat1.jpeg" class="d-block w-100" alt="Cat Image">
-        </div>
-        <div class="carousel-item">
-            <img src="images/dog1.jpeg" class="d-block w-100" alt="Dog Image">
-        </div>
+        <?php
         
+        $first = true;
+        foreach ($pets as $pet): ?>
+            <div class="carousel-item <?php echo $first ? 'active' : ''; ?>">
+                <img src="images/<?php echo htmlspecialchars($pet['image']); ?>" class="d-block w-100" alt="<?php echo htmlspecialchars($pet['petname']); ?>">
+                <div class="carousel-caption d-none d-md-block">
+                    <h5><?php echo htmlspecialchars($pet['petname']); ?></h5>
+                    <p><?php echo htmlspecialchars($pet['caption']); ?></p>
+                </div>
+            </div>
+            <?php $first = false; ?>
+        <?php endforeach; ?>
     </div>
-    <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
+    <button class="carousel-control-prev" type="button" data-bs-target="#petCarousel" data-bs-slide="prev">
         <span class="carousel-control-prev-icon" aria-hidden="true"></span>
         <span class="visually-hidden">Previous</span>
     </button>
-    <button class="carousel-control-next" type="button" data-bs-target="#carouselExample" data-bs-slide="next">
+    <button class="carousel-control-next" type="button" data-bs-target="#petCarousel" data-bs-slide="next">
         <span class="carousel-control-next-icon" aria-hidden="true"></span>
         <span class="visually-hidden">Next</span>
     </button>
 </div>
 
-
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+<?php include('includes/footer.inc.php'); ?>
