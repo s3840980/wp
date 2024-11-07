@@ -1,94 +1,123 @@
 <?php
 session_start();
+$title = "Add Pets Page";
+include('include/db_connect.inc');
+include('include/header.inc');
 
-// Debugging: Display session data to check if user is logged in
-var_dump($_SESSION);
 
-// Comment out the redirection temporarily to diagnose the issue
-if (!isset($_SESSION['user_id'])) {
-    echo "You are not logged in. Please log in to add a pet.";
-    // header("Location: login.php"); // Temporarily removed for debugging
-    // exit();
-} else {
-    echo "Welcome, " . htmlspecialchars($_SESSION['username']) . "! You are logged in.";
+if (!isset($_SESSION['id'])) {
+    header("Location: login.php");
+    exit();
 }
 
-$title = "Add a Pet";
-include('includes/header.inc.php');
-include('includes/db_connect.inc.php');
+$errorMsg = "";
+$successMsg = "";
 
-$message = ""; // Variable to hold feedback messages
 
-// Handle form submission
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $petname = $_POST['petname'];
-    $type = $_POST['type'];
-    $description = $_POST['description'];
-    $caption = $_POST['caption'];
-    $age = $_POST['age'];
-    $location = $_POST['location'];
-    $username = $_SESSION['username']; // Use the logged-in user's username
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $petName = trim($_POST['petName']);
+    $petType = $_POST['petType'];
+    $petDescription = trim($_POST['petDescription']);
+    $petAge = intval($_POST['petAge']);
+    $petLocation = trim($_POST['petLocation']);
+    $imageCaption = trim($_POST['imageCaption']);
+    $userId = $_SESSION['id'];
 
-    // Check if an image was uploaded
-    if (isset($_FILES['image']) && $_FILES['image']['error'] == 0) {
-        $upload_dir = "images/";
-        $image_name = basename($_FILES['image']['name']);
-        $target_file = $upload_dir . $image_name;
+    
+    if (isset($_FILES['petImage']) && $_FILES['petImage']['error'] == 0) {
+        $allowedTypes = ['image/jpeg', 'image/png', 'image/gif'];
+        $fileType = $_FILES['petImage']['type'];
+        $fileName = basename($_FILES['petImage']['name']);
+        $targetDirectory = "images/";
+        $targetFile = $targetDirectory . uniqid() . "_" . $fileName;
 
-        // Move the uploaded file to the target directory
-        if (move_uploaded_file($_FILES['image']['tmp_name'], $target_file)) {
-            try {
-                $stmt = $conn->prepare("INSERT INTO pets (petname, description, image, caption, age, location, type, username) VALUES (:petname, :description, :image, :caption, :age, :location, :type, :username)");
-                $stmt->bindParam(':petname', $petname);
-                $stmt->bindParam(':description', $description);
-                $stmt->bindParam(':image', $target_file);
-                $stmt->bindParam(':caption', $caption);
-                $stmt->bindParam(':age', $age);
-                $stmt->bindParam(':location', $location);
-                $stmt->bindParam(':type', $type);
-                $stmt->bindParam(':username', $username);
-                $stmt->execute();
+        
+        if (in_array($fileType, $allowedTypes)) {
+            if (move_uploaded_file($_FILES['petImage']['tmp_name'], $targetFile)) {
+                
+                $stmt = $conn->prepare("INSERT INTO pets (user_id, name, type, description, age, location, image_path, image_caption) VALUES (?, ?, ?, ?, ?, ?, ?, ?)");
+                $stmt->bind_param("isssisss", $userId, $petName, $petType, $petDescription, $petAge, $petLocation, $targetFile, $imageCaption);
 
-                $message = "Pet added successfully!";
-            } catch (PDOException $e) {
-                $message = "Error: " . $e->getMessage();
+                if ($stmt->execute()) {
+                    $successMsg = "Pet added successfully!";
+                } else {
+                    $errorMsg = "Error saving pet details. Please try again.";
+                }
+                $stmt->close();
+            } else {
+                $errorMsg = "Error uploading image.";
             }
         } else {
-            $message = "Failed to upload image. Please try again.";
+            $errorMsg = "Invalid image type. Only JPG, PNG, and GIF files are allowed.";
         }
     } else {
-        $message = "Please select an image to upload.";
+        $errorMsg = "Please upload an image.";
     }
 }
+
+include('include/nav.inc');
 ?>
 
-<h2>Add a New Pet</h2>
-<?php if ($message): ?>
-    <p><?php echo htmlspecialchars($message); ?></p>
-<?php endif; ?>
-<form method="POST" action="" enctype="multipart/form-data">
-    <label for="petname">Pet Name:</label>
-    <input type="text" id="petname" name="petname" required>
+<main class="container my-4 flex-grow-1">
+    <h1 class="text-center mb-4">Add a Pet</h1>
+    <p class="text-center mb-4">You can add a new pet here</p>
 
-    <label for="type">Type:</label>
-    <input type="text" id="type" name="type" required>
+    <!-- Display messages -->
+    <?php if ($errorMsg): ?>
+        <div class="alert alert-danger"><?= htmlspecialchars($errorMsg) ?></div>
+    <?php elseif ($successMsg): ?>
+        <div class="alert alert-success"><?= htmlspecialchars($successMsg) ?></div>
+    <?php endif; ?>
 
-    <label for="description">Description:</label>
-    <textarea id="description" name="description" required></textarea>
+    <!-- Pet Form -->
+    <form action="<?= htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="POST" enctype="multipart/form-data" novalidate>
+        <div class="mb-3">
+            <label for="petName" class="form-label">Pet Name: <span class="text-danger">*</span></label>
+            <input type="text" name="petName" class="form-control" id="petName" placeholder="Provide a name for the pet" required>
+        </div>
 
-    <label for="caption">Image Caption:</label>
-    <input type="text" id="caption" name="caption" required>
+        <div class="mb-3">
+            <label for="petType" class="form-label">Type: <span class="text-danger">*</span></label>
+            <select name="petType" class="form-select" id="petType" required>
+                <option selected disabled value="">--Choose an option--</option>
+                <option>Dog</option>
+                <option>Cat</option>
+                <option>Bird</option>
+                <option>Other</option>
+            </select>
+        </div>
 
-    <label for="age">Age:</label>
-    <input type="number" step="0.1" id="age" name="age" required>
+        <div class="mb-3">
+            <label for="petDescription" class="form-label">Description: <span class="text-danger">*</span></label>
+            <textarea name="petDescription" class="form-control" id="petDescription" rows="3" placeholder="Describe the pet briefly" required></textarea>
+        </div>
 
-    <label for="location">Location:</label>
-    <input type="text" id="location" name="location" required>
+        <div class="mb-3">
+            <label for="petImage" class="form-label">Select an Image: <span class="text-danger">*</span></label>
+            <input type="file" name="petImage" class="form-control" id="petImage" accept="image/*" required>
+            <div class="form-text">MAX IMAGE SIZE: 500PX</div>
+        </div>
 
-    <label for="image">Pet Image:</label>
-    <input type="file" id="image" name="image" accept="image/*" required>
+        <div class="mb-3">
+            <label for="imageCaption" class="form-label">Image Caption: <span class="text-danger">*</span></label>
+            <input type="text" name="imageCaption" class="form-control" id="imageCaption" placeholder="Describe the image in one word" required>
+        </div>
 
-    <button type="submit" class="btn-custom">Add Pet</button>
-</form>
+        <div class="mb-3">
+            <label for="petAge" class="form-label">Age (months): <span class="text-danger">*</span></label>
+            <input type="number" name="petAge" class="form-control" id="petAge" placeholder="Age of a pet in months" required>
+        </div>
 
-<?php include('includes/footer.inc.php'); ?>
+        <div class="mb-3">
+            <label for="petLocation" class="form-label">Location: <span class="text-danger">*</span></label>
+            <input type="text" name="petLocation" class="form-control" id="petLocation" placeholder="Location of the pet" required>
+        </div>
+
+        <div class="text-center">
+            <button type="submit" class="btn btn-primary btn-submit me-2">Submit</button>
+            <button type="reset" class="btn btn-outline-secondary">Clear</button>
+        </div>
+    </form>
+</main>
+
+<?php include('include/footer.inc'); ?>
