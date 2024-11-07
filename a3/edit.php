@@ -1,98 +1,127 @@
 <?php
-session_start();
-if (!isset($_SESSION['user_id'])) {
+session_start(); 
+$title = "Edit Pet Page";
+include('include/db_connect.inc'); 
+include('include/header.inc'); 
+include('include/nav.inc'); 
+
+if (!isset($_SESSION['id'])) {
     header("Location: login.php");
     exit();
 }
 
-$title = "Edit Pet";
-include('includes/header.inc.php');
-include('includes/db_connect.inc.php');
+if (isset($_GET['id'])) {
+    $petId = intval($_GET['id']); 
+    $query = "SELECT id, name, type, description, age, location, image_path FROM pets WHERE id = ? AND user_id = ?";
+    $stmt = $conn->prepare($query);
+    $stmt->bind_param("ii", $petId, $_SESSION['id']);
+    $stmt->execute();
+    $result = $stmt->get_result();
 
-$pet_id = $_GET['id'];
-$message = "";
+    if ($result->num_rows === 0) {
+        echo "<div class='alert alert-danger'>No pet found with that ID.</div>";
+        exit();
+    }
 
-$stmt = $conn->prepare("SELECT * FROM pets WHERE id = :id AND username = :username");
-$stmt->bindParam(':id', $pet_id);
-$stmt->bindParam(':username', $_SESSION['username']);
-$stmt->execute();
-$pet = $stmt->fetch(PDO::FETCH_ASSOC);
-
-if (!$pet) {
-    echo "Pet not found or you do not have permission to edit this pet.";
+    $pet = $result->fetch_assoc();
+    $stmt->close();
+} else {
+    echo "<div class='alert alert-danger'>No pet ID provided.</div>";
     exit();
 }
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $petname = $_POST['petname'];
-    $type = $_POST['type'];
-    $description = $_POST['description'];
-    $caption = $_POST['caption'];
-    $age = $_POST['age'];
-    $location = $_POST['location'];
 
-    if (isset($_FILES['image']) && $_FILES['image']['error'] == 0) {
-        $upload_dir = "images/";
-        $image_name = basename($_FILES['image']['name']);
-        $target_file = $upload_dir . $image_name;
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $petName = $_POST['petName'];
+    $petType = $_POST['petType'];
+    $petDescription = $_POST['petDescription'];
+    $petAge = intval($_POST['petAge']);
+    $petLocation = $_POST['petLocation'];
+    
+    // Handle image upload
+    $imagePath = $pet['image_path']; 
+    if (isset($_FILES['petImage']) && $_FILES['petImage']['error'] === UPLOAD_ERR_OK) {
+        $targetDir = "images/";
+        $imageFileType = strtolower(pathinfo($_FILES['petImage']['name'], PATHINFO_EXTENSION));
+        $targetFile = $targetDir . uniqid("pet_", true) . '.' . $imageFileType;
 
-        if (move_uploaded_file($_FILES['image']['tmp_name'], $target_file)) {
-            $image = $target_file;
+        // Validate image file size and type (optional)
+        $check = getimagesize($_FILES['petImage']['tmp_name']);
+        if ($check !== false && $_FILES['petImage']['size'] <= 50000000) { // 500KB
+            if (move_uploaded_file($_FILES['petImage']['tmp_name'], $targetFile)) {
+                $imagePath = $targetFile; // Update image path
+            } else {
+                echo "<div class='alert alert-danger'>Sorry, there was an error uploading your file.</div>";
+            }
         } else {
-            $message = "Failed to upload image. Please try again.";
+            echo "<div class='alert alert-danger'>File is not an image or too large.</div>";
         }
-    } else {
-        $image = $pet['image'];
     }
 
-    try {
-        $stmt = $conn->prepare("UPDATE pets SET petname = :petname, description = :description, image = :image, caption = :caption, age = :age, location = :location, type = :type WHERE id = :id AND username = :username");
-        $stmt->bindParam(':petname', $petname);
-        $stmt->bindParam(':description', $description);
-        $stmt->bindParam(':image', $image);
-        $stmt->bindParam(':caption', $caption);
-        $stmt->bindParam(':age', $age);
-        $stmt->bindParam(':location', $location);
-        $stmt->bindParam(':type', $type);
-        $stmt->bindParam(':id', $pet_id);
-        $stmt->bindParam(':username', $_SESSION['username']);
-        $stmt->execute();
+    $updateQuery = "UPDATE pets SET name = ?, type = ?, description = ?, age = ?, location = ?, image_path = ? WHERE id = ? AND user_id = ?";
+    $updateStmt = $conn->prepare($updateQuery);
+    $updateStmt->bind_param("ssssssss", $petName, $petType, $petDescription, $petAge, $petLocation, $imagePath, $petId, $_SESSION['id']);
 
-        header("Location: pets.php");
+    if ($updateStmt->execute()) {
+        echo "<div class='alert alert-success'>Pet details updated successfully!</div>";
+        header("Location: user.php"); 
         exit();
-    } catch (PDOException $e) {
-        $message = "Error: " . $e->getMessage();
+    } else {
+        echo "<div class='alert alert-danger'>Error updating pet details. Please try again.</div>";
     }
+
+    $updateStmt->close();
 }
+
 ?>
 
-<h2>Edit Pet</h2>
-<?php if ($message): ?>
-    <p><?php echo htmlspecialchars($message); ?></p>
-<?php endif; ?>
-<form method="POST" action="" enctype="multipart/form-data">
-    <label for="petname">Pet Name:</label>
-    <input type="text" id="petname" name="petname" value="<?php echo htmlspecialchars($pet['petname']); ?>" required>
+<main class="container my-4">
+    <h1 class="text-center mb-4">Edit Pet: <?= htmlspecialchars($pet['name']) ?></h1>
+    <p class="text-center mb-4">Update the details of your pet</p>
 
-    <label for="type">Type:</label>
-    <input type="text" id="type" name="type" value="<?php echo htmlspecialchars($pet['type']); ?>" required>
+    <form action="" method="POST" enctype="multipart/form-data">
+        <div class="mb-3">
+            <label for="petName" class="form-label">Pet Name: <span class="text-danger">*</span></label>
+            <input type="text" class="form-control" id="petName" name="petName" value="<?= htmlspecialchars($pet['name']) ?>" required>
+        </div>
 
-    <label for="description">Description:</label>
-    <textarea id="description" name="description" required><?php echo htmlspecialchars($pet['description']); ?></textarea>
+        <div class="mb-3">
+            <label for="petType" class="form-label">Type: <span class="text-danger">*</span></label>
+            <select class="form-select" id="petType" name="petType" required>
+                <option value="Dog" <?= $pet['type'] === 'Dog' ? 'selected' : '' ?>>Dog</option>
+                <option value="Cat" <?= $pet['type'] === 'Cat' ? 'selected' : '' ?>>Cat</option>
+                <option value="Bird" <?= $pet['type'] === 'Bird' ? 'selected' : '' ?>>Bird</option>
+                <option value="Other" <?= $pet['type'] === 'Other' ? 'selected' : '' ?>>Other</option>
+            </select>
+        </div>
 
-    <label for="caption">Image Caption:</label>
-    <input type="text" id="caption" name="caption" value="<?php echo htmlspecialchars($pet['caption']); ?>" required>
+        <div class="mb-3">
+            <label for="petDescription" class="form-label">Description: <span class="text-danger">*</span></label>
+            <textarea class="form-control" id="petDescription" name="petDescription" rows="3" required><?= htmlspecialchars($pet['description']) ?></textarea>
+        </div>
 
-    <label for="age">Age:</label>
-    <input type="number" step="0.1" id="age" name="age" value="<?php echo htmlspecialchars($pet['age']); ?>" required>
+        <div class="mb-3">
+            <label for="petImage" class="form-label">Select an Image:</label>
+            <input type="file" class="form-control" id="petImage" name="petImage">
+            <div class="form-text">Current Image: <img src="<?= htmlspecialchars($pet['image_path']) ?>" alt="<?= htmlspecialchars($pet['name']) ?>" class="pet-image" style="max-width: 150px; margin-top: 5px;"></div>
+            <div class="form-text">MAX IMAGE SIZE: 500KB</div>
+        </div>
 
-    <label for="location">Location:</label>
-    <input type="text" id="location" name="location" value="<?php echo htmlspecialchars($pet['location']); ?>" required>
+        <div class="mb-3">
+            <label for="petAge" class="form-label">Age (months): <span class="text-danger">*</span></label>
+            <input type="number" class="form-control" id="petAge" name="petAge" value="<?= htmlspecialchars($pet['age']) ?>" required>
+        </div>
 
-    <label for="image">Pet Image (Leave empty to keep current image):</label>
-    <input type="file" id="image" name="image" accept="image/*">
+        <div class="mb-3">
+            <label for="petLocation" class="form-label">Location: <span class="text-danger">*</span></label>
+            <input type="text" class="form-control" id="petLocation" name="petLocation" value="<?= htmlspecialchars($pet['location']) ?>" required>
+        </div>
 
-    <button type="submit" class="btn-custom">Update Pet</button>
-</form>
+        <div class="text-center">
+            <button type="submit" class="btn btn-primary">Update Pet</button>
+            <button type="reset" class="btn btn-outline-secondary">Clear</button>
+        </div>
+    </form>
+</main>
 
-<?php include('includes/footer.inc.php'); ?>
+<?php include('include/footer.inc'); ?>
