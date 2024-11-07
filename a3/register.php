@@ -3,7 +3,6 @@ $title = "Register Page";
 include('includes/db_connect.inc'); 
 include('includes/header.inc'); 
 
-
 $errorMsg = $successMsg = "";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
@@ -14,16 +13,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $confirmPassword = $_POST['confirm_password'];
     $bio = trim($_POST['bio']);
 
-   
+    // Check for required fields and matching passwords
     if (!$username || !$email || !$password || !$confirmPassword) {
         $errorMsg = "All fields marked with * are required.";
     } elseif ($password !== $confirmPassword) {
         $errorMsg = "Passwords do not match.";
     } else {
-        
-        $hashedPassword = password_hash($password, PASSWORD_BCRYPT);
+        // Hash the password with SHA-1
+        $hashedPassword = sha1($password);
 
-        
+        // Prepare SQL statement to insert the new user
         $stmt = $conn->prepare("INSERT INTO users (username, email, password, bio) VALUES (?, ?, ?, ?)");
         $stmt->bind_param("ssss", $username, $email, $hashedPassword, $bio);
 
