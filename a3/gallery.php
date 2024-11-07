@@ -1,28 +1,47 @@
 <?php
-session_start();
-$title = "Pet Gallery";
-include('includes/header.inc.php');
-include('includes/db_connect.inc.php');
+$title = "Gallery Page";
+include('include/db_connect.inc');
+include('include/header.inc'); 
+include('include/nav.inc'); 
 
+$petType = isset($_GET['pet_type']) ? $_GET['pet_type'] : '';
 
-$stmt = $conn->prepare("SELECT id, petname, image, caption FROM pets ORDER BY id DESC");
+$query = "SELECT name, image_path, id FROM pets WHERE 1=1"; 
+
+if ($petType) {
+    $query .= " AND type = ?";
+}
+
+$stmt = $conn->prepare($query);
+
+if ($petType) {
+    $stmt->bind_param("s", $petType);
+}
+
 $stmt->execute();
-$pets = $stmt->fetchAll(PDO::FETCH_ASSOC);
+$result = $stmt->get_result();
 ?>
 
-<h2>Pet Gallery</h2>
-<div class="gallery-container">
-    <?php foreach ($pets as $pet): ?>
-        <div class="gallery-item">
-            <a href="details.php?id=<?php echo htmlspecialchars($pet['id']); ?>">
-                <img src="images/<?php echo htmlspecialchars($pet['image']); ?>" alt="<?php echo htmlspecialchars($pet['petname']); ?>" class="gallery-image">
-            </a>
-            <div class="gallery-caption">
-                <strong><?php echo htmlspecialchars($pet['petname']); ?></strong>
-                <p><?php echo htmlspecialchars($pet['caption']); ?></p>
+<main class="container my-4">
+    <h1 class="text-center mb-4">Pet Gallery</h1>
+    <div class="row g-4">
+        <?php if ($result && $result->num_rows > 0): ?>
+            <?php while ($pet = $result->fetch_assoc()): ?>
+                <div class="col-md-4">
+                    <div class="pet-card">
+                        <a href="details.php?id=<?= $pet['id'] ?>" style="text-decoration: none;">
+                            <img src="<?= htmlspecialchars($pet['image_path']) ?>" alt="<?= htmlspecialchars($pet['name']) ?>" class="img-fluid">
+                            <div class="pet-name"><?= htmlspecialchars($pet['name']) ?></div>
+                        </a>
+                    </div>
+                </div>
+            <?php endwhile; ?>
+        <?php else: ?>
+            <div class="col-md-12">
+                <p class="text-center">No pets found matching your criteria.</p>
             </div>
-        </div>
-    <?php endforeach; ?>
-</div>
+        <?php endif; ?>
+    </div>
+</main>
 
-<?php include('includes/footer.inc.php'); ?>
+<?php include('include/footer.inc'); ?>
