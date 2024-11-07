@@ -1,19 +1,25 @@
 <?php
 session_start();
+
+// Debugging: Display session data to check if user is logged in
 var_dump($_SESSION);
 
+// Comment out the redirection temporarily to diagnose the issue
 if (!isset($_SESSION['user_id'])) {
-    header("Location: login.php");
-    exit();
+    echo "You are not logged in. Please log in to add a pet.";
+    // header("Location: login.php"); // Temporarily removed for debugging
+    // exit();
+} else {
+    echo "Welcome, " . htmlspecialchars($_SESSION['username']) . "! You are logged in.";
 }
 
-$title = "Add a Pet"; 
+$title = "Add a Pet";
 include('includes/header.inc.php');
 include('includes/db_connect.inc.php');
 
-$message = ""; 
+$message = ""; // Variable to hold feedback messages
 
-
+// Handle form submission
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $petname = $_POST['petname'];
     $type = $_POST['type'];
@@ -23,19 +29,19 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $location = $_POST['location'];
     $username = $_SESSION['username']; // Use the logged-in user's username
 
-    
+    // Check if an image was uploaded
     if (isset($_FILES['image']) && $_FILES['image']['error'] == 0) {
         $upload_dir = "images/";
         $image_name = basename($_FILES['image']['name']);
         $target_file = $upload_dir . $image_name;
 
-        
+        // Move the uploaded file to the target directory
         if (move_uploaded_file($_FILES['image']['tmp_name'], $target_file)) {
             try {
                 $stmt = $conn->prepare("INSERT INTO pets (petname, description, image, caption, age, location, type, username) VALUES (:petname, :description, :image, :caption, :age, :location, :type, :username)");
                 $stmt->bindParam(':petname', $petname);
                 $stmt->bindParam(':description', $description);
-                $stmt->bindParam(':image', $target_file); // Store image path in database
+                $stmt->bindParam(':image', $target_file);
                 $stmt->bindParam(':caption', $caption);
                 $stmt->bindParam(':age', $age);
                 $stmt->bindParam(':location', $location);
@@ -43,8 +49,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $stmt->bindParam(':username', $username);
                 $stmt->execute();
 
-                header("Location: pets.php"); 
-                exit();
+                $message = "Pet added successfully!";
             } catch (PDOException $e) {
                 $message = "Error: " . $e->getMessage();
             }
