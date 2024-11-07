@@ -1,15 +1,18 @@
 <?php
 session_start();
+
+
 if (!isset($_SESSION['user_id'])) {
     header("Location: login.php");
     exit();
 }
 
-$title = "Add a Pet";
+$title = "Add a Pet"; 
 include('includes/header.inc.php');
 include('includes/db_connect.inc.php');
 
-$message = "";
+$message = ""; 
+
 
 if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $petname = $_POST['petname'];
@@ -18,19 +21,21 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $caption = $_POST['caption'];
     $age = $_POST['age'];
     $location = $_POST['location'];
-    $username = $_SESSION['username'];
+    $username = $_SESSION['username']; // Use the logged-in user's username
 
+    
     if (isset($_FILES['image']) && $_FILES['image']['error'] == 0) {
         $upload_dir = "images/";
         $image_name = basename($_FILES['image']['name']);
         $target_file = $upload_dir . $image_name;
 
+        
         if (move_uploaded_file($_FILES['image']['tmp_name'], $target_file)) {
             try {
                 $stmt = $conn->prepare("INSERT INTO pets (petname, description, image, caption, age, location, type, username) VALUES (:petname, :description, :image, :caption, :age, :location, :type, :username)");
                 $stmt->bindParam(':petname', $petname);
                 $stmt->bindParam(':description', $description);
-                $stmt->bindParam(':image', $target_file);
+                $stmt->bindParam(':image', $target_file); // Store image path in database
                 $stmt->bindParam(':caption', $caption);
                 $stmt->bindParam(':age', $age);
                 $stmt->bindParam(':location', $location);
@@ -38,7 +43,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
                 $stmt->bindParam(':username', $username);
                 $stmt->execute();
 
-                header("Location: pets.php");
+                header("Location: pets.php"); 
                 exit();
             } catch (PDOException $e) {
                 $message = "Error: " . $e->getMessage();
