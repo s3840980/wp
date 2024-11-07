@@ -1,8 +1,8 @@
 <?php
 $title = "Gallery Page";
-include('include/db_connect.inc');
-include('include/header.inc'); 
-include('include/nav.inc'); 
+include('includes/db_connect.inc');
+include('includes/header.inc'); 
+include('includes/nav.inc'); 
 
 $petType = isset($_GET['pet_type']) ? $_GET['pet_type'] : '';
 
@@ -44,4 +44,4 @@ $result = $stmt->get_result();
     </div>
 </main>
 
-<?php include('include/footer.inc'); ?>
+<?php include('includes/footer.inc'); ?>
