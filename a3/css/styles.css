@@ -1,30 +1,39 @@
 /* General Styles */
 body {
     font-family: Arial, sans-serif;
-    background-color: #fcf9ec;
+    background-color: #fcf9ec; /* Main background color */
     margin: 0;
     padding: 0;
 }
 
 h1, h2, h3 {
-    color: #36454F;
+    color: #E57F3D; /* h1 and h2 color */
     text-align: center;
     margin: 20px 0;
+}
+
+h2 {
+    color: #008080; /* h2 color */
 }
 
 /* Header and Navigation */
 header {
     text-align: center;
     padding: 10px;
-    background-color: #E57F3D;
+    background-color: #E57F3D; /* Header background color */
 }
 
 nav.navbar {
     margin-bottom: 20px;
+    background-color: #008080; /* Navbar background color */
 }
 
 .navbar-dark .navbar-nav .nav-link {
-    color: #fcf9ec;
+    color: #fcf9ec; /* Navbar link color */
+}
+
+.navbar-dark .navbar-nav .nav-link:hover {
+    color: #E57F3D; /* Navbar link hover color */
 }
 
 /* Table Styles */
@@ -42,8 +51,8 @@ table th, table td {
 }
 
 table th {
-    background-color: #008080;
-    color: #fcf9ec;
+    background-color: #008080; /* Table header background color */
+    color: #fcf9ec; /* Table header text color */
 }
 
 table tr:nth-child(even) {
@@ -91,10 +100,11 @@ table tr:nth-child(even) {
 .gallery-caption {
     padding: 10px;
     font-size: 0.9em;
+    color: #36454F; /* Gallery text color */
 }
 
 .gallery-caption strong {
-    color: #36454F;
+    color: #36454F; /* Gallery caption strong text color */
 }
 
 /* User Profile Styles */
@@ -112,13 +122,13 @@ table tr:nth-child(even) {
 .user-profile p {
     font-size: 1em;
     margin: 10px 0;
-    color: #36454F;
+    color: #36454F; /* User profile text color */
 }
 
 /* Button Styles */
 .btn-custom {
     display: inline-block;
-    background-color: #E57F3D;
+    background-color: #E57F3D; /* Button background color */
     color: #fff;
     padding: 10px 20px;
     text-align: center;
@@ -130,12 +140,12 @@ table tr:nth-child(even) {
 }
 
 .btn-custom:hover {
-    background-color: #cc6d32;
+    background-color: #cc6d32; /* Button hover color */
     color: #fff;
 }
 
 .btn-primary {
-    background-color: #008080;
+    background-color: #008080; /* Primary button color */
     color: #fff;
 }
 
@@ -145,8 +155,8 @@ table tr:nth-child(even) {
 
 /* Footer Styles */
 footer {
-    background-color: #E57F3D;
-    color: #fcf9ec;
+    background-color: #E57F3D; /* Footer background color */
+    color: #008080; /* Footer text color */
     text-align: center;
     padding: 10px 0;
     margin-top: 20px;
