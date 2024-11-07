@@ -10,11 +10,13 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $username = $_POST['username'];
     $password = $_POST['password'];
 
+    // Check if the user exists in the database
     $stmt = $conn->prepare("SELECT * FROM users WHERE username = :username");
     $stmt->bindParam(':username', $username);
     $stmt->execute();
     $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
+    // Verify the password
     if ($user && password_verify($password, $user['password'])) {
         $_SESSION['user_id'] = $user['id'];
         $_SESSION['username'] = $user['username'];
@@ -28,7 +30,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 
 <h2>Login</h2>
 <?php if ($message): ?>
-    <p><?php echo $message; ?></p>
+    <p><?php echo htmlspecialchars($message); ?></p>
 <?php endif; ?>
 <form method="POST" action="">
     <label for="username">Username:</label>
