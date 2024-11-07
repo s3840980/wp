@@ -1,234 +1,110 @@
-@import url('https://fonts.googleapis.com/css2?family=Ysabeau+SC:wght@400&family=Poetsen+One&family=Permanent+Marker&display=swap');
-@import url('https://fonts.googleapis.com/icon?family=Material+Icons');
-
-
 body {
-    font-family: 'Ysabeau SC', sans-serif;
-    background-color: #fcf9ec; 
-    margin: 0;
-    padding: 0;
-    color: #36454F; 
+    background-color: #fefbf0;
+    
 }
-
-h1 {
-    font-family: 'Permanent Marker', cursive; 
-    color: #E57F3D;
-    text-align: center;
-    margin: 20px 0;
+.navbar {
+    background-color: #1e8a7a;
 }
-
-h2, h3 {
-    font-family: 'Poetsen One', sans-serif;
-    color: #008080;
-    text-align: center;
-    margin: 20px 0;
+.navbar-brand i {
+    color: white;
+    font-size: 1.5rem;
 }
-
-/* Header and Navigation */
-header {
-    text-align: center;
-    padding: 10px;
-    background-color: #E57F3D;
+.navbar-light .navbar-nav .nav-link {
+    color: white;
 }
-
-nav.navbar {
+.homepet-section {
+    background-color: #fefbf0;
+    padding: 50px 0;
+}
+.home-title {
+    font-size: 4rem;
+    color: #e67e22;
+}
+.home-subtitle {
+    font-size: 3rem;
+    color: #1e8a7a;
+}
+.search-section {
+    background-color: white;
+    padding: 20px 0;
+}
+.btn-submit {
     background-color: #008080;
-    padding: 10px;
+    border-color: #008080;
 }
-
-.navbar-dark .navbar-nav .nav-link {
-    color: #fcf9ec;
-    font-family: 'Ysabeau SC', sans-serif;
-    margin: 0 10px;
-    text-decoration: none;
-}
-
-.navbar-dark .navbar-nav .nav-link:hover {
-    color: #E57F3D;
-}
-
-/* Form Styles */
-form {
-    width: 80%;
-    max-width: 600px;
-    margin: 20px auto;
-    background-color: #fff;
-    padding: 20px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-form label {
-    font-weight: bold;
-    color: #36454F;
-}
-
-form input[type="text"],
-form input[type="password"],
-form input[type="number"],
-form input[type="file"],
-form select,
-form textarea {
-    width: 100%;
-    padding: 10px;
-    margin: 10px 0;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    font-family: 'Ysabeau SC', sans-serif;
-}
-
-form button {
-    background-color: #E57F3D;
-    color: #fff;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    font-family: 'Ysabeau SC', sans-serif;
-}
-
-form button:hover {
-    background-color: #cc6d32;
-}
-
-/* Table Styles */
-table {
-    width: 90%;
-    margin: 20px auto;
-    background-color: #fff;
-    border-collapse: collapse;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-table th, table td {
-    padding: 12px;
-    text-align: left;
-    border-bottom: 1px solid #ddd;
-    color: #36454F;
-}
-
-table th {
-    background-color: #008080;
-    color: #fcf9ec;
-    font-family: 'Poetsen One', sans-serif;
-}
-
-table tr:nth-child(even) {
-    background-color: #f2f2f2;
-}
-
-table tr:hover {
-    background-color: #f1f1f1;
-}
-
-/* Gallery Styles */
-.gallery-container {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 15px;
-    justify-content: center;
-    padding: 20px;
-}
-
-.gallery-item {
-    width: 200px;
-    background-color: #fff;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    overflow: hidden;
-    transition: transform 0.3s ease;
-}
-
-.gallery-item:hover {
-    transform: scale(1.05);
-}
-
-.gallery-image {
-    width: 100%;
-    height: auto;
-    border-bottom: 1px solid #ddd;
-}
-
-.gallery-caption {
-    padding: 10px;
-    color: #36454F;
-    font-size: 0.9em;
-}
-
-/* User Profile Styles */
-.user-profile {
-    width: 80%;
-    max-width: 600px;
-    margin: 20px auto;
-    padding: 20px;
-    background-color: #fff;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-}
-
-/* Button Styles */
-.btn-custom {
-    background-color: #E57F3D;
-    color: #fff;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    text-decoration: none;
-    font-family: 'Ysabeau SC', sans-serif;
-}
-
-.btn-custom:hover {
-    background-color: #cc6d32;
-}
-
-.btn-primary {
-    background-color: #008080;
-    color: #fff;
-}
-
-.btn-primary:hover {
+.btn-submit:hover {
     background-color: #006666;
+    border-color: #006666;
+}
+h1,h3{
+    margin: 30px;
+    text-align: center;
+}
+.pet-card {
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    text-decoration: none;
+}
+.pet-card a {
+    text-decoration: none;
+    color: inherit;
+}
+.pet-card img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
 }
 
-/* Footer Styles */
-footer {
-    background-color: #E57F3D;
-    color: #008080;
+.pet-name {
+    background-color: white;
+    padding: 10px;
     text-align: center;
+    font-weight: bold;
+    text-decoration: none;
+
+}
+.pets-image {
+    width: 100%;
+    max-height: 300px;
+    object-fit: cover;
+}
+.pet-image {
+    width: 100%;
+    max-height: 300px;
+    object-fit: cover;
+}
+.pet-info {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+.pet-info i {
+    font-size: 1.2rem;
+}
+.table {
+    margin-bottom: 0;
+}
+.table th {
+    background-color: #f8f9fa;
+}
+.table-striped tbody tr:nth-of-type(odd) {
+    background-color: rgba(0, 0, 0, 0.05);
+}
+.footer {
+    background-color: #e67e22;
+    color: white;
     padding: 10px 0;
 }
-
-footer p {
-    margin: 0;
+.carousel-inner {
+    height: 350px; 
+    width: 550px;
 }
 
-/* Search Form Styles */
-.search-form {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-    margin: 20px 0;
-}
-
-.search-form input[type="text"],
-.search-form select {
-    padding: 8px;
-    font-size: 1em;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-}
-
-.search-form .btn-custom {
-    padding: 8px 16px;
-}
-
-/* Icon Styles */
-.material-icons {
-    vertical-align: middle;
-    font-size: 1.2em;
-    color: #36454F;
+.carousel-image {
+    height: 100%; 
+    width: 100%;
+    object-fit: cover; 
+    object-position: center;
 }
