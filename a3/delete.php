@@ -10,12 +10,12 @@ if (!isset($_SESSION['id'])) {
     exit();
 }
 
-if (isset($_GET['id'])) {
-    $petId = intval($_GET['id']); 
+if (isset($_GET['petid'])) { // Using 'petid' instead of 'id'
+    $petId = intval($_GET['petid']); 
 
-    $query = "SELECT image_path FROM pets WHERE id = ? AND user_id = ?";
+    $query = "SELECT image FROM pets WHERE petid = ? AND username = ?";
     $stmt = $conn->prepare($query);
-    $stmt->bind_param("ii", $petId, $_SESSION['id']);
+    $stmt->bind_param("is", $petId, $_SESSION['username']);
     $stmt->execute();
     $result = $stmt->get_result();
 
@@ -27,14 +27,13 @@ if (isset($_GET['id'])) {
     $pet = $result->fetch_assoc();
     $stmt->close();
 
-    $deleteQuery = "DELETE FROM pets WHERE id = ? AND user_id = ?";
+    $deleteQuery = "DELETE FROM pets WHERE petid = ? AND username = ?";
     $deleteStmt = $conn->prepare($deleteQuery);
-    $deleteStmt->bind_param("ii", $petId, $_SESSION['id']);
+    $deleteStmt->bind_param("is", $petId, $_SESSION['username']);
 
     if ($deleteStmt->execute()) {
-        // Delete the image file from the server
-        if (file_exists($pet['image_path'])) {
-            unlink($pet['image_path']); // Delete the file
+        if (file_exists($pet['image'])) {
+            unlink($pet['image']); // Delete the image file from the server
         }
         echo "<div class='alert alert-success'>Pet deleted successfully!</div>";
     } else {
