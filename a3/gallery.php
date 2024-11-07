@@ -14,6 +14,11 @@ if ($petType) {
 
 $stmt = $conn->prepare($query);
 
+// Check if the prepare statement was successful
+if ($stmt === false) {
+    die("SQL preparation failed: " . htmlspecialchars($conn->error));
+}
+
 if ($petType) {
     $stmt->bind_param("s", $petType);
 }
