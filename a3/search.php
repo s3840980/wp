@@ -1,55 +1,68 @@
 <?php
-session_start();
-$title = "Search Pets";
-include('includes/header.inc.php');
-include('includes/db_connect.inc.php');
-
-$searchResults = [];
-$keyword = "";
+$title = "Search Results";
+include('include/db_connect.inc');
+include('include/header.inc'); 
+include('include/nav.inc');
 
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $keyword = $_POST['keyword'];
+$keyword = isset($_GET['keyword']) ? $_GET['keyword'] : '';
+$petType = isset($_GET['pet_type']) ? $_GET['pet_type'] : '';
 
-    
-    $stmt = $conn->prepare("SELECT * FROM pets WHERE petname LIKE :keyword OR description LIKE :keyword OR type LIKE :keyword ORDER BY id DESC");
-    $searchKeyword = '%' . $keyword . '%';
-    $stmt->bindParam(':keyword', $searchKeyword);
-    $stmt->execute();
-    $searchResults = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+$query = "SELECT name, image_path, id FROM pets WHERE 1=1"; 
+
+
+if ($keyword) {
+    $query .= " AND (name LIKE ? OR location LIKE ? OR description LIKE ?)"; 
 }
+if ($petType) {
+    $query .= " AND type = ?";
+}
+
+$stmt = $conn->prepare($query);
+
+$types = '';
+$params = [];
+if ($keyword) {
+    $types .= 'sss'; 
+    $params[] = "%$keyword%";
+    $params[] = "%$keyword%";
+    $params[] = "%$keyword%"; 
+}
+if ($petType) {
+    $types .= 's';
+    $params[] = $petType; 
+}
+
+if ($types) {
+    $stmt->bind_param($types, ...$params);
+}
+
+$stmt->execute();
+$result = $stmt->get_result();
 ?>
 
-<h2>Search Pets</h2>
+<main class="container my-4">
+    <h1 class="text-center mb-4">Search Results</h1>
 
-<!-- Search Form -->
-<form method="POST" action="" class="search-form">
-    <label for="keyword">Enter keyword:</label>
-    <input type="text" id="keyword" name="keyword" value="<?php echo htmlspecialchars($keyword); ?>" required>
-    <button type="submit" class="btn-custom">Search</button>
-</form>
-
-<!-- Search Results -->
-<?php if ($_SERVER['REQUEST_METHOD'] == 'POST'): ?>
-    <h3>Search Results for "<?php echo htmlspecialchars($keyword); ?>"</h3>
-
-    <?php if (count($searchResults) > 0): ?>
-        <div class="gallery-container">
-            <?php foreach ($searchResults as $pet): ?>
-                <div class="gallery-item">
-                    <a href="details.php?id=<?php echo htmlspecialchars($pet['id']); ?>">
-                        <img src="images/<?php echo htmlspecialchars($pet['image']); ?>" alt="<?php echo htmlspecialchars($pet['petname']); ?>" class="gallery-image">
-                    </a>
-                    <div class="gallery-caption">
-                        <strong><?php echo htmlspecialchars($pet['petname']); ?></strong>
-                        <p><?php echo htmlspecialchars($pet['caption']); ?></p>
+    <div class="row g-4">
+        <?php if ($result && $result->num_rows > 0): ?>
+            <?php while ($pet = $result->fetch_assoc()): ?>
+                <div class="col-md-4">
+                    <div class="pet-card">
+                        <a href="details.php?id=<?= $pet['id'] ?>" style="text-decoration: none;">
+                            <img src="<?= htmlspecialchars($pet['image_path']) ?>" alt="<?= htmlspecialchars($pet['name']) ?>" class="img-fluid">
+                            <div class="pet-name"><?= htmlspecialchars($pet['name']) ?></div>
+                        </a>
                     </div>
                 </div>
-            <?php endforeach; ?>
-        </div>
-    <?php else: ?>
-        <p>No pets found matching your search criteria.</p>
-    <?php endif; ?>
-<?php endif; ?>
+            <?php endwhile; ?>
+        <?php else: ?>
+            <div class="col-md-12">
+                <p class="text-center">No pets found matching your search criteria.</p>
+            </div>
+        <?php endif; ?>
+    </div>
+</main>
 
-<?php include('includes/footer.inc.php'); ?>
+<?php include('include/footer.inc'); ?>
