@@ -46,8 +46,8 @@ $result = $conn->query($query);
             </div>
 
             <div class="col-md-6 text-center text-md-start">
-                <h1 class="hero-title text-center">PETS VICTORIA</h1>
-                <h3 class="hero-subtitle text-center">WELCOME TO PET ADOPTION</h3>
+                <h1 class="home-title text-center">PETS VICTORIA</h1>
+                <h3 class="home-subtitle text-center">WELCOME TO PET ADOPTION</h3>
             </div>
         </div>
     </div>
