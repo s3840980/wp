@@ -1,20 +1,25 @@
 <?php
-session_start(); 
+session_start();
 $title = "User Pets Page";
-include('includes/db_connect.inc'); 
-include('includes/header.inc'); 
-include('includes/nav.inc'); 
-
+include('includes/db_connect.inc');
+include('includes/header.inc');
+include('includes/nav.inc');
 
 if (!isset($_SESSION['id'])) {
     header("Location: login.php");
     exit();
 }
 
-
 $userId = $_SESSION['id'];
+
+// Prepare SQL statement to fetch user’s pets
 $query = "SELECT id, name, type, description, age, location, image_path FROM pets WHERE user_id = ?";
 $stmt = $conn->prepare($query);
+
+if (!$stmt) {
+    die("SQL preparation failed: " . $conn->error);
+}
+
 $stmt->bind_param("i", $userId);
 $stmt->execute();
 $result = $stmt->get_result();
@@ -51,7 +56,6 @@ $result = $stmt->get_result();
     <?php endif; ?>
 
     <?php
-    
     $result->free();
     $stmt->close();
     ?>
