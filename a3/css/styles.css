@@ -1,19 +1,29 @@
+/* Import Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Ysabeau+SC:wght@400&family=Poetsen+One&family=Permanent+Marker&display=swap');
+@import url('https://fonts.googleapis.com/icon?family=Material+Icons');
+
 /* General Styles */
 body {
-    font-family: Arial, sans-serif;
+    font-family: 'Ysabeau SC', sans-serif;
     background-color: #fcf9ec; /* Main background color */
     margin: 0;
     padding: 0;
+    color: #36454F; /* Main text color */
 }
 
-h1, h2, h3 {
-    color: #E57F3D; /* h1 and h2 color */
+/* Heading Styles */
+h1 {
+    font-family: 'Permanent Marker', cursive; /* Home page <h1> font */
+    color: #E57F3D; /* <h1> color */
     text-align: center;
     margin: 20px 0;
 }
 
-h2 {
-    color: #008080; /* h2 color */
+h2, h3 {
+    font-family: 'Poetsen One', sans-serif; /* <h2> and <h3> font */
+    color: #008080; /* <h2> and <h3> color */
+    text-align: center;
+    margin: 20px 0;
 }
 
 /* Header and Navigation */
@@ -24,12 +34,15 @@ header {
 }
 
 nav.navbar {
-    margin-bottom: 20px;
     background-color: #008080; /* Navbar background color */
+    padding: 10px;
 }
 
 .navbar-dark .navbar-nav .nav-link {
     color: #fcf9ec; /* Navbar link color */
+    font-family: 'Ysabeau SC', sans-serif;
+    margin: 0 10px;
+    text-decoration: none;
 }
 
 .navbar-dark .navbar-nav .nav-link:hover {
@@ -38,7 +51,8 @@ nav.navbar {
 
 /* Table Styles */
 table {
-    width: 100%;
+    width: 90%;
+    max-width: 1200px;
     border-collapse: collapse;
     margin: 20px auto;
     background-color: #fff;
@@ -48,11 +62,13 @@ table th, table td {
     padding: 12px;
     text-align: left;
     border-bottom: 1px solid #ddd;
+    color: #36454F;
 }
 
 table th {
     background-color: #008080; /* Table header background color */
     color: #fcf9ec; /* Table header text color */
+    font-family: 'Poetsen One', sans-serif;
 }
 
 table tr:nth-child(even) {
@@ -104,7 +120,7 @@ table tr:nth-child(even) {
 }
 
 .gallery-caption strong {
-    color: #36454F; /* Gallery caption strong text color */
+    color: #36454F;
 }
 
 /* User Profile Styles */
@@ -122,7 +138,7 @@ table tr:nth-child(even) {
 .user-profile p {
     font-size: 1em;
     margin: 10px 0;
-    color: #36454F; /* User profile text color */
+    color: #36454F;
 }
 
 /* Button Styles */
@@ -184,4 +200,11 @@ footer p {
 
 .search-form .btn-custom {
     padding: 8px 16px;
+}
+
+/* Icon Styles */
+.material-icons {
+    vertical-align: middle;
+    font-size: 1.2em;
+    color: #36454F; /* Icon color */
 }
