@@ -3,8 +3,8 @@ if (session_status() === PHP_SESSION_NONE) {
     session_start();
 }
 $title = "Login Page";
-include('include/db_connect.inc'); 
-include('include/header.inc'); 
+include('includes/db_connect.inc'); 
+include('includes/header.inc'); 
 
 
 $errorMsg = "";
@@ -82,4 +82,4 @@ include('include/nav.inc');
     </div>
 </main>
 
-<?php include('include/footer.inc'); ?>
+<?php include('includes/footer.inc'); ?>
