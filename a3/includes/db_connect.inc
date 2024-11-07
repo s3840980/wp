@@ -6,7 +6,7 @@ if (strstr($_SERVER['SERVER_NAME'], 'localhost')) {
     $password = "";
     $dbname = "petsvictoria";
 } else{
-    $servername = talsprddb02.int.its.rmit.edu.au";
+    $servername = "talsprddb02.int.its.rmit.edu.au";
     $username = "s3840980";
     $password = "Jollybird4!";
     $dbname = "s3840980";
