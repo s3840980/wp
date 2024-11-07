@@ -55,7 +55,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 }
 
-include('include/nav.inc');
+include('includes/nav.inc');
 ?>
 
 <main class="container my-4 flex-grow-1">
