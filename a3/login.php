@@ -1,51 +1,85 @@
 <?php
-session_start();
-$title = "Login";
-include('includes/header.inc.php');
-include('includes/db_connect.inc.php');
+if (session_status() === PHP_SESSION_NONE) {
+    session_start();
+}
+$title = "Login Page";
+include('include/db_connect.inc'); 
+include('include/header.inc'); 
 
-$message = "";
 
-if ($_SERVER['REQUEST_METHOD'] == 'POST') {
-    $username = $_POST['username'];
+$errorMsg = "";
+
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    // Sanitize and validate inputs
+    $email = filter_var(trim($_POST['email']), FILTER_VALIDATE_EMAIL);
     $password = $_POST['password'];
 
-    // Hash the password using SHA-1 to compare with the stored hash
-    $hashed_password = sha1($password);
-
-    try {
-        $stmt = $conn->prepare("SELECT * FROM users WHERE username = :username AND password = :password");
-        $stmt->bindParam(':username', $username);
-        $stmt->bindParam(':password', $hashed_password);
+    if (!$email || !$password) {
+        $errorMsg = "Please provide both email and password.";
+    } else {
+        
+        $stmt = $conn->prepare("SELECT id, username, password FROM users WHERE email = ?");
+        $stmt->bind_param("s", $email);
         $stmt->execute();
-        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+        $stmt->store_result();
+        
+        if ($stmt->num_rows === 1) {
+            $stmt->bind_result($id, $username, $hashedPassword);
+            $stmt->fetch();
 
-        if ($user) {
-            $_SESSION['user_id'] = $user['id'];        // Set the user ID from the database
-            $_SESSION['username'] = $user['username']; // Set the username from the database
-            header("Location: index.php");
-            exit();
+           
+            if (password_verify($password, $hashedPassword)) {
+                // Set session variables
+                $_SESSION["id"] = $id;
+                $_SESSION['username'] = $username;
+                header("Location: user.php"); 
+                exit();
+            } else {
+                $errorMsg = "Invalid email or password.";
+            }
         } else {
-            $message = "Invalid username or password.";
+            $errorMsg = "No account found with that email.";
         }
-    } catch (PDOException $e) {
-        $message = "Error: " . $e->getMessage();
+        $stmt->close();
     }
 }
+
+include('include/nav.inc'); 
 ?>
 
-<h2>Login</h2>
-<?php if ($message): ?>
-    <p><?php echo htmlspecialchars($message); ?></p>
-<?php endif; ?>
-<form method="POST" action="">
-    <label for="username">Username:</label>
-    <input type="text" id="username" name="username" required>
+<main class="container my-5">
+    <h1 class="text-center mb-4">Login</h1>
+    <p class="text-center mb-4">Please enter your credentials to login</p>
 
-    <label for="password">Password:</label>
-    <input type="password" id="password" name="password" required>
+    <!-- Display error message -->
+    <?php if ($errorMsg): ?>
+        <div class="alert alert-danger"><?= htmlspecialchars($errorMsg) ?></div>
+    <?php endif; ?>
 
-    <button type="submit" class="btn-custom">Login</button>
-</form>
+    <form class="needs-validation" action="<?= htmlspecialchars($_SERVER['PHP_SELF']); ?>" method="POST" novalidate>
+        <div class="mb-3">
+            <label for="email" class="form-label">Email<span class="text-danger">*</span></label>
+            <input type="email" name="email" class="form-control" id="email" required>
+            <div class="invalid-feedback">Please provide a valid email.</div>
+        </div>
 
-<?php include('includes/footer.inc.php'); ?>
+        <div class="mb-3">
+            <label for="password" class="form-label">Password<span class="text-danger">*</span></label>
+            <input type="password" name="password" class="form-control" id="password" required>
+            <div class="invalid-feedback">Please provide your password.</div>
+        </div>
+
+
+        <div class="text-center">
+            <button class="btn btn-primary" type="submit">Login</button>
+            <button class="btn btn-outline-secondary" type="reset">Clear</button>
+        </div>
+    </form>
+
+    <div class="text-center mt-3">
+        <p>Don't have an account? <a href="register.php" class="text-decoration-none ">Register here</a></p>
+    </div>
+</main>
+
+<?php include('include/footer.inc'); ?>
