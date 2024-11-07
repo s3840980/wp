@@ -4,29 +4,30 @@ include('includes/db_connect.inc');
 include('includes/header.inc'); 
 include('includes/nav.inc'); 
 
-if (!isset($_GET['petid'])) {  // Use 'petid' as per your database structure
+// Check if 'id' parameter is provided
+if (!isset($_GET['petid']) || !is_numeric($_GET['petid'])) {
     header("Location: gallery.php"); 
     exit();
 }
 
-$petId = intval($_GET['petid']);
+$petId = intval($_GET['petid']); // Get the pet ID from URL
 
-$query = "SELECT * FROM pets WHERE petid = ?";  // Use 'petid' instead of 'id'
+// Prepare and execute the SQL query to fetch pet details
+$query = "SELECT * FROM pets WHERE petid = ?";
 $stmt = $conn->prepare($query);
+if ($stmt === false) {
+    echo "SQL preparation failed: " . htmlspecialchars($conn->error);
+    exit();
+}
+$stmt->bind_param("i", $petId);
+$stmt->execute();
+$result = $stmt->get_result();
 
-if ($stmt) {
-    $stmt->bind_param("i", $petId);
-    $stmt->execute();
-    $result = $stmt->get_result();
-
-    if ($result->num_rows > 0) {
-        $pet = $result->fetch_assoc();
-    } else {
-        echo "<p class='text-center'>No pet found.</p>";
-        exit();
-    }
+// Fetch the pet details if found
+if ($result && $result->num_rows > 0) {
+    $pet = $result->fetch_assoc();
 } else {
-    echo "<p class='text-center'>Failed to prepare the SQL statement.</p>";
+    echo "<p class='text-center'>No pet found.</p>";
     exit();
 }
 ?>
@@ -39,10 +40,10 @@ if ($stmt) {
         </div>
         <div class="col-md-6">
             <h3>Details</h3>
-            <p><strong><i class="fas fa-paw"></i> Type:</strong> <?= htmlspecialchars($pet['type']) ?></p>
-            <p><strong><i class="fas fa-calendar-alt"></i> Age:</strong> <?= htmlspecialchars($pet['age']) ?> months</p>
-            <p><strong><i class="fas fa-map-marker-alt"></i> Location:</strong> <?= htmlspecialchars($pet['location']) ?></p>
-            <p><strong><i class="fas fa-info-circle"></i> Description:</strong> <?= htmlspecialchars($pet['description']) ?></p>
+            <p><strong>Type:</strong> <?= htmlspecialchars($pet['type']) ?></p>
+            <p><strong>Age:</strong> <?= htmlspecialchars($pet['age']) ?> months</p>
+            <p><strong>Location:</strong> <?= htmlspecialchars($pet['location']) ?></p>
+            <p><strong>Description:</strong> <?= htmlspecialchars($pet['description']) ?></p>
             <a href="gallery.php" class="btn btn-secondary">Back to Gallery</a>
         </div>
     </div>
