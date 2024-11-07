@@ -1,35 +1,38 @@
 <?php
-$title = "Register Page";
-include('includes/db_connect.inc'); 
-include('includes/header.inc'); 
+session_start();
+include('includes/db_connect.inc');
+include('includes/header.inc');
 
 $errorMsg = $successMsg = "";
 
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
     // Sanitize and validate inputs
     $username = trim($_POST['username']);
-    $email = filter_var(trim($_POST['email']), FILTER_VALIDATE_EMAIL);
     $password = $_POST['password'];
     $confirmPassword = $_POST['confirm_password'];
-    $bio = trim($_POST['bio']);
 
     // Check for required fields and matching passwords
-    if (!$username || !$email || !$password || !$confirmPassword) {
+    if (!$username || !$password || !$confirmPassword) {
         $errorMsg = "All fields marked with * are required.";
     } elseif ($password !== $confirmPassword) {
         $errorMsg = "Passwords do not match.";
     } else {
-        // Hash the password with SHA-1
+        // Hash the password using SHA-1
         $hashedPassword = sha1($password);
 
         // Prepare SQL statement to insert the new user
-        $stmt = $conn->prepare("INSERT INTO users (username, email, password, bio) VALUES (?, ?, ?, ?)");
-        $stmt->bind_param("ssss", $username, $email, $hashedPassword, $bio);
+        $stmt = $conn->prepare("INSERT INTO users (username, password, reg_date) VALUES (?, ?, NOW())");
+        
+        if (!$stmt) {
+            die("SQL preparation failed: " . $conn->error);
+        }
+
+        $stmt->bind_param("ss", $username, $hashedPassword);
 
         if ($stmt->execute()) {
             $successMsg = "Registration successful! You can now log in.";
         } else {
-            $errorMsg = "An error occurred. Please try again later.";
+            $errorMsg = "An error occurred: " . $stmt->error;
         }
         $stmt->close();
     }
@@ -57,26 +60,15 @@ include('includes/nav.inc');
         </div>
 
         <div class="mb-3">
-            <label for="email" class="form-label">Email<span class="text-danger">*</span></label>
-            <input type="email" name="email" class="form-control" id="email" value="<?= htmlspecialchars($email ?? '') ?>" required>
-            <div class="invalid-feedback">Please provide a valid email.</div>
-        </div>
-
-        <div class="mb-3">
             <label for="password" class="form-label">Password<span class="text-danger">*</span></label>
             <input type="password" name="password" class="form-control" id="password" required>
             <div class="invalid-feedback">Please provide a password.</div>
         </div>
 
         <div class="mb-3">
-            <label for="confirm-password" class="form-label">Confirm Password<span class="text-danger">*</span></label>
-            <input type="password" name="confirm_password" class="form-control" id="confirm-password" required>
+            <label for="confirm_password" class="form-label">Confirm Password<span class="text-danger">*</span></label>
+            <input type="password" name="confirm_password" class="form-control" id="confirm_password" required>
             <div class="invalid-feedback">Please confirm your password.</div>
-        </div>
-
-        <div class="mb-3">
-            <label for="bio" class="form-label">Bio</label>
-            <textarea class="form-control" name="bio" id="bio" rows="3"><?= htmlspecialchars($bio ?? '') ?></textarea>
         </div>
 
         <div class="text-center">
