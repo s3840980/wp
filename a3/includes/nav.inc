@@ -22,7 +22,7 @@ if (session_status() === PHP_SESSION_NONE) {
                     <ul class="dropdown-menu" aria-labelledby="petTypeDropdown">
                         <li><a class="dropdown-item" href="gallery.php">All Types</a></li>
                         <?php
-                        include('include/db_connect.inc');
+                        include('includes/db_connect.inc');
                         
                         $typeQuery = "SELECT DISTINCT type FROM pets";
                         $typeResult = $conn->query($typeQuery);
