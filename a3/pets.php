@@ -1,8 +1,8 @@
 <?php
 $title = "Pets Page";
-include('include/db_connect.inc');
-include('include/header.inc'); 
-include('include/nav.inc'); 
+include('includes/db_connect.inc');
+include('includes/header.inc'); 
+include('includes/nav.inc'); 
 
 
 $query = "SELECT name, type, age, location, image_path FROM pets";
@@ -62,4 +62,4 @@ if ($imageResult && $imageResult->num_rows > 0) {
     </div>
 </main>
 
-<?php include('include/footer.inc'); ?>
+<?php include('includes/footer.inc'); ?>
