@@ -1,8 +1,8 @@
 <?php
 session_start();
 $title = "Add Pets Page";
-include('include/db_connect.inc');
-include('include/header.inc');
+include('includes/db_connect.inc');
+include('includes/header.inc');
 
 
 if (!isset($_SESSION['id'])) {
@@ -120,4 +120,4 @@ include('include/nav.inc');
     </form>
 </main>
 
-<?php include('include/footer.inc'); ?>
+<?php include('includes/footer.inc'); ?>
