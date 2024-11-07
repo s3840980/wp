@@ -1,11 +1,11 @@
 <?php
 session_start();
-$title = "View Pets";
+$title = "Pets"; 
 include('includes/header.inc.php');
 include('includes/db_connect.inc.php');
 
 
-$stmt = $conn->prepare("SELECT petname, type, description, image, age, location FROM pets ORDER BY id DESC");
+$stmt = $conn->prepare("SELECT petname, type, description, image, age, location FROM pets ORDER BY petid DESC");
 $stmt->execute();
 $pets = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
@@ -14,7 +14,7 @@ $pets = $stmt->fetchAll(PDO::FETCH_ASSOC);
 <table class="table table-striped">
     <thead>
         <tr>
-            <th>Pet Name</th>
+            <th>Name</th>
             <th>Type</th>
             <th>Description</th>
             <th>Image</th>
@@ -28,9 +28,7 @@ $pets = $stmt->fetchAll(PDO::FETCH_ASSOC);
                 <td><?php echo htmlspecialchars($pet['petname']); ?></td>
                 <td><?php echo htmlspecialchars($pet['type']); ?></td>
                 <td><?php echo htmlspecialchars($pet['description']); ?></td>
-                <td>
-                    <img src="images/<?php echo htmlspecialchars($pet['image']); ?>" alt="<?php echo htmlspecialchars($pet['petname']); ?>" width="100">
-                </td>
+                <td><img src="images/<?php echo htmlspecialchars($pet['image']); ?>" alt="Pet Image" width="100"></td>
                 <td><?php echo htmlspecialchars($pet['age']); ?></td>
                 <td><?php echo htmlspecialchars($pet['location']); ?></td>
             </tr>
