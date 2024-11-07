@@ -89,7 +89,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <h1 class="text-center mb-4">Edit Pet: <?= htmlspecialchars($pet['petname']) ?></h1>
     <p class="text-center mb-4">Update the details of your pet</p>
 
-    <form action="" method="POST" enctype="multipart/form-data">
+    <form action="edit.php?petid=<?= htmlspecialchars($petId) ?>" method="POST" enctype="multipart/form-data">
         <div class="mb-3">
             <label for="petName" class="form-label">Pet Name: <span class="text-danger">*</span></label>
             <input type="text" class="form-control" id="petName" name="petName" value="<?= htmlspecialchars($pet['petname']) ?>" required>
@@ -97,7 +97,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
         <div class="mb-3">
             <label for="petType" class="form-label">Type: <span class="text-danger">*</span></label>
-            <select class="form-select" id="petType" name="petType" required>
+            <select name="petType" class="form-select" id="petType" required>
+                <option value="" disabled selected>--Choose an option--</option>
                 <option value="Dog" <?= $pet['type'] === 'Dog' ? 'selected' : '' ?>>Dog</option>
                 <option value="Cat" <?= $pet['type'] === 'Cat' ? 'selected' : '' ?>>Cat</option>
                 <option value="Bird" <?= $pet['type'] === 'Bird' ? 'selected' : '' ?>>Bird</option>
