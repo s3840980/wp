@@ -1,39 +1,45 @@
 <?php
-session_start();
-$title = "Pet Details";
-include('includes/header.inc.php');
-include('includes/db_connect.inc.php');
+$title = "Pet Details Page";
+include('include/db_connect.inc');
+include('include/header.inc'); 
+include('include/nav.inc'); 
 
-if (isset($_GET['petid'])) {
-    $petid = $_GET['petid'];
+if (!isset($_GET['id'])) {
+    header("Location: gallery.php"); 
+    exit();
+}
 
-    
-    $stmt = $conn->prepare("SELECT petname, type, description, image, caption, age, location FROM pets WHERE petid = :petid");
-    $stmt->bindParam(':petid', $petid);
-    $stmt->execute();
-    $pet = $stmt->fetch(PDO::FETCH_ASSOC);
+$petId = intval($_GET['id']);
 
-    
-    if (!$pet) {
-        echo "<p>Pet not found.</p>";
-    }
+$query = "SELECT * FROM pets WHERE id = ?";
+$stmt = $conn->prepare($query);
+$stmt->bind_param("i", $petId);
+$stmt->execute();
+$result = $stmt->get_result();
+
+if ($result->num_rows > 0) {
+    $pet = $result->fetch_assoc();
 } else {
-    echo "<p>No pet selected.</p>";
-    include('includes/footer.inc.php');
+    echo "<p class='text-center'>No pet found.</p>";
     exit();
 }
 ?>
 
-<?php if ($pet): ?>
-    <h2><?php echo htmlspecialchars($pet['petname']); ?></h2>
-    <div class="pet-details">
-        <img src="images/<?php echo htmlspecialchars($pet['image']); ?>" alt="<?php echo htmlspecialchars($pet['petname']); ?>" class="img-fluid">
-        <p><strong>Type:</strong> <?php echo htmlspecialchars($pet['type']); ?></p>
-        <p><strong>Description:</strong> <?php echo htmlspecialchars($pet['description']); ?></p>
-        <p><strong>Image Caption:</strong> <?php echo htmlspecialchars($pet['caption']); ?></p>
-        <p><strong>Age:</strong> <?php echo htmlspecialchars($pet['age']); ?> years</p>
-        <p><strong>Location:</strong> <?php echo htmlspecialchars($pet['location']); ?></p>
+<main class="container my-4 flex-grow-1">
+    <h1 class="text-center mb-4"><?= htmlspecialchars($pet['name']) ?></h1>
+    <div class="row">
+        <div class="col-md-6">
+            <img src="<?= htmlspecialchars($pet['image_path']) ?>" alt="<?= htmlspecialchars($pet['name']) ?>" class="img-fluid">
+        </div>
+        <div class="col-md-6">
+            <h3>Details</h3>
+            <p><strong><i class="fas fa-paw"></i> Type:</strong> <?= htmlspecialchars($pet['type']) ?></p>
+            <p><strong><i class="fas fa-calendar-alt"></i> Age:</strong> <?= htmlspecialchars($pet['age']) ?> months</p>
+            <p><strong><i class="fas fa-map-marker-alt"></i> Location:</strong> <?= htmlspecialchars($pet['location']) ?></p>
+            <p><strong><i class="fas fa-info-circle"></i> Description:</strong> <?= htmlspecialchars($pet['description']) ?></p>
+            <a href="gallery.php" class="btn btn-secondary">Back to Gallery</a>
+        </div>
     </div>
-<?php endif; ?>
+</main>
 
-<?php include('includes/footer.inc.php'); ?>
+<?php include('include/footer.inc'); ?>
