@@ -5,13 +5,17 @@ include('includes/db_connect.inc');
 include('includes/header.inc'); 
 include('includes/nav.inc'); 
 
-if (!isset($_SESSION['id'])) {
+// Ensure the user is logged in
+if (!isset($_SESSION['username'])) {
     header("Location: login.php");
     exit();
 }
 
-if (isset($_GET['petid'])) { // Using 'petid' instead of 'id'
+// Check if a pet ID is provided in the URL
+if (isset($_GET['petid'])) {
     $petId = intval($_GET['petid']); 
+
+    // Retrieve pet details
     $query = "SELECT petid, petname, type, description, age, location, image, caption FROM pets WHERE petid = ? AND username = ?";
     $stmt = $conn->prepare($query);
     $stmt->bind_param("is", $petId, $_SESSION['username']);
@@ -30,6 +34,7 @@ if (isset($_GET['petid'])) { // Using 'petid' instead of 'id'
     exit();
 }
 
+// Handle form submission to update pet details
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $petName = $_POST['petName'];
     $petType = $_POST['petType'];
@@ -38,7 +43,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $petLocation = $_POST['petLocation'];
     $imageCaption = $_POST['imageCaption'];
     
-    $imagePath = $pet['image'];
+    $imagePath = $pet['image']; // Keep the old image path by default
+
+    // Handle image upload if a new file is uploaded
     if (isset($_FILES['petImage']) && $_FILES['petImage']['error'] === UPLOAD_ERR_OK) {
         $targetDir = "images/";
         $imageFileType = strtolower(pathinfo($_FILES['petImage']['name'], PATHINFO_EXTENSION));
@@ -48,6 +55,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         if ($check !== false && $_FILES['petImage']['size'] <= 500000) {
             if (move_uploaded_file($_FILES['petImage']['tmp_name'], $targetFile)) {
                 $imagePath = $targetFile;
+                // Optionally delete the old image if it’s being replaced
+                if (file_exists($pet['image'])) {
+                    unlink($pet['image']);
+                }
             } else {
                 echo "<div class='alert alert-danger'>Sorry, there was an error uploading your file.</div>";
             }
@@ -56,6 +67,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 
+    // Update pet details in the database
     $updateQuery = "UPDATE pets SET petname = ?, type = ?, description = ?, age = ?, location = ?, image = ?, caption = ? WHERE petid = ? AND username = ?";
     $updateStmt = $conn->prepare($updateQuery);
     $updateStmt->bind_param("sssssssis", $petName, $petType, $petDescription, $petAge, $petLocation, $imagePath, $imageCaption, $petId, $_SESSION['username']);
