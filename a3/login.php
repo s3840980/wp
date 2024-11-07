@@ -10,20 +10,26 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $username = $_POST['username'];
     $password = $_POST['password'];
 
-    // Check if the user exists in the database
-    $stmt = $conn->prepare("SELECT * FROM users WHERE username = :username");
-    $stmt->bindParam(':username', $username);
-    $stmt->execute();
-    $user = $stmt->fetch(PDO::FETCH_ASSOC);
+    
+    $hashed_password = sha1($password);
 
-    // Verify the password
-    if ($user && password_verify($password, $user['password'])) {
-        $_SESSION['user_id'] = $user['id'];
-        $_SESSION['username'] = $user['username'];
-        header("Location: index.php");
-        exit();
-    } else {
-        $message = "Invalid username or password.";
+    try {
+        $stmt = $conn->prepare("SELECT * FROM users WHERE username = :username AND password = :password");
+        $stmt->bindParam(':username', $username);
+        $stmt->bindParam(':password', $hashed_password);
+        $stmt->execute();
+        $user = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if ($user) {
+            $_SESSION['user_id'] = $user['id'];
+            $_SESSION['username'] = $user['username'];
+            header("Location: index.php");
+            exit();
+        } else {
+            $message = "Invalid username or password.";
+        }
+    } catch (PDOException $e) {
+        $message = "Error: " . $e->getMessage();
     }
 }
 ?>
