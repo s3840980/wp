@@ -10,7 +10,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $username = $_POST['username'];
     $password = $_POST['password'];
 
-    
+    // Hash the password using SHA-1 to compare with the stored hash
     $hashed_password = sha1($password);
 
     try {
@@ -21,8 +21,8 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
         $user = $stmt->fetch(PDO::FETCH_ASSOC);
 
         if ($user) {
-            $_SESSION['user_id'] = $user['id'];
-            $_SESSION['username'] = $user['username'];
+            $_SESSION['user_id'] = $user['id'];        // Set the user ID from the database
+            $_SESSION['username'] = $user['username']; // Set the username from the database
             header("Location: index.php");
             exit();
         } else {
