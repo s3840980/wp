@@ -1,16 +1,16 @@
 <?php
 session_start();
 $title = "Home - Pets Victoria"; 
-include('includes/header.inc.php'); 
-include('includes/db_connect.inc.php'); 
+include('includes/header.inc.php');
+include('includes/db_connect.inc.php');
 
 
-$stmt = $conn->prepare("SELECT petname, image, caption FROM pets ORDER BY id DESC LIMIT 4");
+$stmt = $conn->prepare("SELECT petname, image, caption FROM pets ORDER BY petid DESC LIMIT 4");
 $stmt->execute();
 $pets = $stmt->fetchAll(PDO::FETCH_ASSOC);
 ?>
 
-
+<!-- Page Content -->
 <header>
     <h1>Welcome to Pets Victoria</h1>
     <?php if (isset($_SESSION['username'])): ?>
@@ -22,7 +22,7 @@ $pets = $stmt->fetchAll(PDO::FETCH_ASSOC);
     <?php endif; ?>
 </header>
 
-
+<!-- Dynamic Image Carousel of Last 4 Uploaded Pets -->
 <div id="petCarousel" class="carousel slide" data-bs-ride="carousel">
     <div class="carousel-inner">
         <?php
