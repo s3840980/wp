@@ -1,17 +1,19 @@
 <?php
-// Database connection file (db_connect.inc)
 
-$servername = "localhost";
-$username = "root"; 
-$password = ""; 
-$dbname = "petsvictoria"; 
-
-try {
-    
-    $conn = new PDO("mysql:host=$servername;dbname=$dbname", $username, $password);
-    $conn->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-} catch (PDOException $e) {
-    echo "Connection failed: " . $e->getMessage();
-    die();
+if (strstr($_SERVER['SERVER_NAME'], 'localhost')) {
+    $servername = "talsprddb02.int.its.rmit.edu.au";
+    $username = "root";
+    $password = "";
+    $dbname = "pets";
+} else{
+    $servername = talsprddb02.int.its.rmit.edu.au";
+    $username = "s3840980";
+    $password = "Jollybird4!";
+    $dbname = "s3840980";
 }
-?>
+
+$conn = new mysqli($servername, $username, $password, $dbname);
+
+if ($conn->connect_error){
+    die("Connection failed: " . $conn->connect_error);
+}
