@@ -7,12 +7,10 @@ include('includes/nav.inc');
 $keyword = isset($_GET['keyword']) ? $_GET['keyword'] : '';
 $petType = isset($_GET['pet_type']) ? $_GET['pet_type'] : '';
 
-// Base query
-$query = "SELECT petid, petname, image FROM pets WHERE 1=1";
+$query = "SELECT name, image_path, id FROM pets WHERE 1=1";
 
-// Append conditions if search parameters are provided
 if ($keyword) {
-    $query .= " AND (petname LIKE ? OR location LIKE ? OR description LIKE ?)";
+    $query .= " AND (name LIKE ? OR location LIKE ? OR description LIKE ?)";
 }
 if ($petType) {
     $query .= " AND type = ?";
@@ -23,27 +21,22 @@ $stmt = $conn->prepare($query);
 $types = '';
 $params = [];
 if ($keyword) {
-    $types .= 'sss';
+    $types .= 'sss'; 
     $params[] = "%$keyword%";
     $params[] = "%$keyword%";
-    $params[] = "%$keyword%";
+    $params[] = "%$keyword%"; 
 }
 if ($petType) {
     $types .= 's';
-    $params[] = $petType;
+    $params[] = $petType; 
 }
 
-// Check if the statement was prepared successfully before binding parameters
-if ($stmt) {
-    if ($types) {
-        $stmt->bind_param($types, ...$params);
-    }
-    $stmt->execute();
-    $result = $stmt->get_result();
-} else {
-    echo "<p class='text-danger'>Error in executing the search query. Please try again later.</p>";
-    exit();
+if ($types) {
+    $stmt->bind_param($types, ...$params);
 }
+
+$stmt->execute();
+$result = $stmt->get_result();
 ?>
 
 <main class="container my-4">
@@ -54,9 +47,9 @@ if ($stmt) {
             <?php while ($pet = $result->fetch_assoc()): ?>
                 <div class="col-md-4">
                     <div class="pet-card">
-                        <a href="details.php?id=<?= $pet['petid'] ?>" style="text-decoration: none;">
-                            <img src="<?= htmlspecialchars($pet['image']) ?>" alt="<?= htmlspecialchars($pet['petname']) ?>" class="img-fluid">
-                            <div class="pet-name"><?= htmlspecialchars($pet['petname']) ?></div>
+                        <a href="details.php?id=<?= $pet['id'] ?>" style="text-decoration: none;">
+                            <img src="<?= htmlspecialchars($pet['image_path']) ?>" alt="<?= htmlspecialchars($pet['name']) ?>" class="img-fluid">
+                            <div class="pet-name"><?= htmlspecialchars($pet['name']) ?></div>
                         </a>
                     </div>
                 </div>
