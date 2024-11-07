@@ -1,8 +1,8 @@
 <?php
 $title = "Home - Pets Victoria";
-include('include/db_connect.inc');
-include('include/header.inc'); 
-include('include/nav.inc'); 
+include('includes/db_connect.inc');
+include('includes/header.inc'); 
+include('includes/nav.inc'); 
 
 $query = "SELECT id, name, image_path FROM pets ORDER BY id DESC LIMIT 4";
 $result = $conn->query($query);
@@ -81,4 +81,4 @@ $result = $conn->query($query);
     </div>
 </section>
 
-<?php include('include/footer.inc'); ?>
+<?php include('includes/footer.inc'); ?>
