@@ -2,7 +2,6 @@
 
 include('db_connect.inc.php');
 ?>
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -14,19 +13,6 @@ include('db_connect.inc.php');
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
 </head>
 <body>
-
-<?php
-
-try {
-    $stmt = $conn->query("SELECT * FROM pets LIMIT 1");
-    if ($stmt) {
-        echo "<p>Database connection successful!</p>";
-    }
-} catch (Exception $e) {
-    echo "<p>Database connection failed: " . $e->getMessage() . "</p>";
-}
-?>
-
 
 <header>
     <h1>Welcome to Pets Victoria</h1>
@@ -42,7 +28,7 @@ try {
         <div class="carousel-item">
             <img src="images/dog1.jpeg" class="d-block w-100" alt="Dog Image">
         </div>
-       
+        
     </div>
     <button class="carousel-control-prev" type="button" data-bs-target="#carouselExample" data-bs-slide="prev">
         <span class="carousel-control-prev-icon" aria-hidden="true"></span>
